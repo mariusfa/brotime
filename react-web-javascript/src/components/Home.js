@@ -22,21 +22,12 @@ const createData = (start, end) => {
   };
 };
 
-const rows = [
-  createData(21, 1, 22222),
-  createData(20, 12, 2),
-  createData(19, 12, 2),
-  createData(18, 133, 2),
-  createData(17, 155, 2111),
-  createData(16, 11111, 2)
-];
-
 export default function Home() {
   const [timeList, setTimeList] = useState([]);
 
   useEffect(async () => {
     try {
-      const response = await fetch("http://10.0.0.46:8080/api/time", {
+      const response = await fetch("http://localhost:8080/api/time", {
         headers: { "Content-Type": "application/json" }
       });
       if (!response.ok) {
