@@ -6,9 +6,11 @@ COPY . .
 
 RUN mvn clean install
 
-FROM openjdk:11-jre-alpine
+FROM openjdk:11-jre-slim
 
-RUN apk --no-cache add curl
+RUN apt update && apt install -y \
+    curl \
+    && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /opt/app
 
@@ -16,4 +18,4 @@ COPY --from=builder /opt/app/target/*.jar /opt/app/app.jar
 
 HEALTHCHECK --interval=10s CMD curl --fail http://localhost:8080/healthy || exit 1 
 
-CMD [ "java", "jar", "app.jar" ]
+CMD [ "java", "-jar", "app.jar" ]
