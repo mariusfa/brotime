@@ -35,7 +35,7 @@ export default function Home() {
       }
       const responseJson = await response.json();
       const newTimeList = responseJson.map(item =>
-        createData(item.start, item.end)
+        createData(item.startStamp, item.endStamp)
       );
       console.log(newTimeList);
       setTimeList(newTimeList);
