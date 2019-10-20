@@ -1,18 +1,25 @@
 package com.fagerland.javaapi.models;
 
+import javax.persistence.*;
+
+@Entity
 public class TimeEntry {
 
-    private final long id;
-    private final long start;
-    private final long end;
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
+    private long start;
+    private long end;
 
-    public TimeEntry(long id, long start, long end) {
-        this.id = id;
+    public TimeEntry() {
+    }
+
+    public TimeEntry(long start, long end) {
         this.start = start;
         this.end = end;
     }
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
@@ -22,5 +29,9 @@ public class TimeEntry {
 
     public long getEnd() {
         return end;
+    }
+
+    public void setEnd(long end) {
+        this.end = end;
     }
 }

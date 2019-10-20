@@ -1,10 +1,11 @@
 package com.fagerland.javaapi.controllers;
 
 import com.fagerland.javaapi.models.TimeEntry;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RestController;
+import com.fagerland.javaapi.repositories.TimeRepository;
+import org.springframework.web.bind.annotation.*;
 
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -13,18 +14,47 @@ import java.util.List;
 @RestController
 public class TimeController {
 
+    private final TimeRepository repository;
+
+    private final SimpleDateFormat fmt = new SimpleDateFormat("yyyyMMdd");
+
+    public TimeController(TimeRepository repository) {
+        this.repository = repository;
+    }
+
     @GetMapping("/api/time")
     public List<TimeEntry> getTime() {
-        List<TimeEntry> timeList = new ArrayList<>();
-        populateTimeList(timeList);
-        return timeList;
+        return repository.findAll();
+    }
+
+    @GetMapping("/api/time/register")
+    public void registerTime() {
+        TimeEntry oldTimeEntry = repository.findFirstByOrderByStartAsc();
+        Date currentDate = new Date();
+        if (oldTimeEntry == null) {
+            TimeEntry timeEntry = new TimeEntry(currentDate.getTime(), currentDate.getTime());
+            repository.save(timeEntry);
+            return;
+        }
+        Date oldDate = new Date(oldTimeEntry.getStart());
+        if (isSameDay(currentDate, oldDate)) {
+            oldTimeEntry.setEnd(currentDate.getTime());
+            repository.save(oldTimeEntry);
+        } else {
+            TimeEntry timeEntry = new TimeEntry(currentDate.getTime(), currentDate.getTime());
+            repository.save(timeEntry);
+        }
+    }
+
+    private boolean isSameDay(Date currentDate, Date oldDate) {
+        return fmt.format(currentDate).equals(fmt.format(oldDate));
     }
 
     private void populateTimeList(List<TimeEntry> timeList) {
         for (int i = 0; i < 10; i++) {
             long timeStart = (new Date()).getTime() - 14400000;
             long timeEnd = (new Date()).getTime();
-            timeList.add(new TimeEntry(i, timeStart, timeEnd));
+            timeList.add(new TimeEntry(timeStart, timeEnd));
         }
     }
 }
