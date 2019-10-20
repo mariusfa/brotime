@@ -5,8 +5,6 @@ import com.fagerland.javaapi.repositories.TimeRepository;
 import org.springframework.web.bind.annotation.*;
 
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -29,16 +27,16 @@ public class TimeController {
 
     @GetMapping("/api/time/register")
     public void registerTime() {
-        TimeEntry oldTimeEntry = repository.findFirstByOrderByStartAsc();
+        TimeEntry oldTimeEntry = repository.findFirstByOrderByStartStampAsc();
         Date currentDate = new Date();
         if (oldTimeEntry == null) {
             TimeEntry timeEntry = new TimeEntry(currentDate.getTime(), currentDate.getTime());
             repository.save(timeEntry);
             return;
         }
-        Date oldDate = new Date(oldTimeEntry.getStart());
+        Date oldDate = new Date(oldTimeEntry.getStartStamp());
         if (isSameDay(currentDate, oldDate)) {
-            oldTimeEntry.setEnd(currentDate.getTime());
+            oldTimeEntry.setEndStamp(currentDate.getTime());
             repository.save(oldTimeEntry);
         } else {
             TimeEntry timeEntry = new TimeEntry(currentDate.getTime(), currentDate.getTime());

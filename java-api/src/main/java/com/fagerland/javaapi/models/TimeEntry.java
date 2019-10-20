@@ -3,35 +3,36 @@ package com.fagerland.javaapi.models;
 import javax.persistence.*;
 
 @Entity
+@Table(name = "time_entry")
 public class TimeEntry {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    private long start;
-    private long end;
+    private long startStamp;
+    private long endStamp;
 
     public TimeEntry() {
     }
 
-    public TimeEntry(long start, long end) {
-        this.start = start;
-        this.end = end;
+    public TimeEntry(long startStamp, long endStamp) {
+        this.startStamp = startStamp;
+        this.endStamp = endStamp;
     }
 
     public Long getId() {
         return id;
     }
 
-    public long getStart() {
-        return start;
+    public long getStartStamp() {
+        return startStamp;
     }
 
-    public long getEnd() {
-        return end;
+    public long getEndStamp() {
+        return endStamp;
     }
 
-    public void setEnd(long end) {
-        this.end = end;
+    public void setEndStamp(long endStamp) {
+        this.endStamp = endStamp;
     }
 }

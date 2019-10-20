@@ -7,5 +7,5 @@ import java.util.List;
 
 public interface TimeRepository extends CrudRepository<TimeEntry, Long> {
     List<TimeEntry> findAll();
-    TimeEntry findFirstByOrderByStartAsc();
+    TimeEntry findFirstByOrderByStartStampAsc();
 }
