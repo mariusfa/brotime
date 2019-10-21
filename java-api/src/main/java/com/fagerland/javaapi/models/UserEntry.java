@@ -13,9 +13,6 @@ public class UserEntry {
 
     private String username;
 
-    @OneToMany(mappedBy = "userEntry")
-    private List<TimeEntry> timeEntries;
-
     public UserEntry() {
     }
 
@@ -31,7 +28,4 @@ public class UserEntry {
         return username;
     }
 
-    public List<TimeEntry> getTimeEntries() {
-        return timeEntries;
-    }
 }

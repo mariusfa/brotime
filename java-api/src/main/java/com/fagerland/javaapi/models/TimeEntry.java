@@ -16,12 +16,13 @@ public class TimeEntry {
     @JoinColumn(name = "userEntry_id", nullable = false)
     private UserEntry userEntry;
 
-    public TimeEntry() {
-    }
-
-    public TimeEntry(long startStamp, long endStamp) {
+    public TimeEntry(long startStamp, long endStamp, UserEntry userEntry) {
         this.startStamp = startStamp;
         this.endStamp = endStamp;
+        this.userEntry = userEntry;
+    }
+
+    public TimeEntry() {
     }
 
     public Long getId() {

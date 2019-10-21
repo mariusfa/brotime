@@ -1,7 +1,9 @@
 package com.fagerland.javaapi.controllers;
 
 import com.fagerland.javaapi.models.TimeEntry;
+import com.fagerland.javaapi.models.UserEntry;
 import com.fagerland.javaapi.repositories.TimeRepository;
+import com.fagerland.javaapi.repositories.UserRepository;
 import org.springframework.web.bind.annotation.*;
 
 import java.text.SimpleDateFormat;
@@ -12,47 +14,45 @@ import java.util.List;
 @RestController
 public class TimeController {
 
-    private final TimeRepository repository;
+    private final TimeRepository timeRepository;
+    private final UserRepository userRepository;
 
     private final SimpleDateFormat fmt = new SimpleDateFormat("yyyyMMdd");
 
-    public TimeController(TimeRepository repository) {
-        this.repository = repository;
+    public TimeController(TimeRepository timeRepository, UserRepository userRepository) {
+        this.timeRepository = timeRepository;
+        this.userRepository = userRepository;
     }
 
     @GetMapping("/api/time")
     public List<TimeEntry> getTime() {
-        return repository.findAll();
+        String username = "test";
+        UserEntry userEntry = userRepository.findFirstByUsername(username);
+        return timeRepository.findAllByUserEntryId(userEntry.getId());
     }
 
     @GetMapping("/api/time/register")
     public void registerTime() {
-        TimeEntry oldTimeEntry = repository.findFirstByOrderByStartStampDesc();
+        String username = "test";
+        UserEntry userEntry = userRepository.findFirstByUsername(username);
+        TimeEntry oldTimeEntry = timeRepository.findFirstByUserEntryIdOrderByStartStampDesc(userEntry.getId());
         Date currentDate = new Date();
         if (oldTimeEntry == null) {
-            TimeEntry timeEntry = new TimeEntry(currentDate.getTime(), currentDate.getTime());
-            repository.save(timeEntry);
+            TimeEntry timeEntry = new TimeEntry(currentDate.getTime(), currentDate.getTime(), userEntry);
+            timeRepository.save(timeEntry);
             return;
         }
         Date oldDate = new Date(oldTimeEntry.getStartStamp());
         if (isSameDay(currentDate, oldDate)) {
             oldTimeEntry.setEndStamp(currentDate.getTime());
-            repository.save(oldTimeEntry);
+            timeRepository.save(oldTimeEntry);
         } else {
-            TimeEntry timeEntry = new TimeEntry(currentDate.getTime(), currentDate.getTime());
-            repository.save(timeEntry);
+            TimeEntry timeEntry = new TimeEntry(currentDate.getTime(), currentDate.getTime(), userEntry);
+            timeRepository.save(timeEntry);
         }
     }
 
     private boolean isSameDay(Date currentDate, Date oldDate) {
         return fmt.format(currentDate).equals(fmt.format(oldDate));
-    }
-
-    private void populateTimeList(List<TimeEntry> timeList) {
-        for (int i = 0; i < 10; i++) {
-            long timeStart = (new Date()).getTime() - 14400000;
-            long timeEnd = (new Date()).getTime();
-            timeList.add(new TimeEntry(timeStart, timeEnd));
-        }
     }
 }
