@@ -27,7 +27,7 @@ public class TimeController {
 
     @GetMapping("/api/time/register")
     public void registerTime() {
-        TimeEntry oldTimeEntry = repository.findFirstByOrderByStartStampAsc();
+        TimeEntry oldTimeEntry = repository.findFirstByOrderByStartStampDesc();
         Date currentDate = new Date();
         if (oldTimeEntry == null) {
             TimeEntry timeEntry = new TimeEntry(currentDate.getTime(), currentDate.getTime());

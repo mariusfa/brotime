@@ -1,0 +1,1 @@
+docker run --rm -it --network="host" -v /var/lib/postgresql:/var/lib/postgresql postgres:12

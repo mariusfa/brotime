@@ -3,7 +3,7 @@ package com.fagerland.javaapi.models;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "time_entry")
+@Table(name = "timeEntry")
 public class TimeEntry {
 
     @Id
@@ -11,6 +11,10 @@ public class TimeEntry {
     private Long id;
     private long startStamp;
     private long endStamp;
+
+    @ManyToOne
+    @JoinColumn(name = "userEntry_id", nullable = false)
+    private UserEntry userEntry;
 
     public TimeEntry() {
     }
@@ -22,6 +26,14 @@ public class TimeEntry {
 
     public Long getId() {
         return id;
+    }
+
+    public UserEntry getUserEntry() {
+        return userEntry;
+    }
+
+    public void setUserEntry(UserEntry userEntry) {
+        this.userEntry = userEntry;
     }
 
     public long getStartStamp() {
