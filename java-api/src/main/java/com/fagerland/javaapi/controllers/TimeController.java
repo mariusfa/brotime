@@ -17,8 +17,6 @@ import java.util.List;
 @RestController
 public class TimeController {
 
-    Logger logger = LoggerFactory.getLogger(TimeController.class);
-
     private final TimeRepository timeRepository;
     private final UserRepository userRepository;
 

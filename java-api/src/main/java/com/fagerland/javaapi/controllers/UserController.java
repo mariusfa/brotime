@@ -28,7 +28,6 @@ public class UserController {
 
     @PostMapping("/api/user/register")
     public ResponseEntity registerUser(@RequestBody LoginForm loginForm) {
-        System.out.println("Registering user");
         UserEntry userEntry = userRepository.findFirstByUsername(loginForm.getUsername());
         if (userEntry == null) {
             BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
@@ -43,7 +42,6 @@ public class UserController {
 
     @PostMapping("/api/user/signin")
     public ResponseEntity signinUser(@RequestBody LoginForm loginForm) {
-        System.out.println("Sign in user");
         UserEntry userEntry = userRepository.findFirstByUsername(loginForm.getUsername());
         if (userEntry == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
