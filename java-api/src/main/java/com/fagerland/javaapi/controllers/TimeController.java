@@ -37,8 +37,8 @@ public class TimeController {
     }
 
     @GetMapping("/api/time/register")
-    public void registerTime() {
-        String username = "test";
+    public void registerTime(Authentication authentication) {
+        String username = authentication.getName();
         UserEntry userEntry = userRepository.findFirstByUsername(username);
         TimeEntry oldTimeEntry = timeRepository.findFirstByUserEntryIdOrderByStartStampDesc(userEntry.getId());
         Date currentDate = new Date();
