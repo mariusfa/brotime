@@ -1,7 +1,6 @@
 package com.fagerland.javaapi.models;
 
 import javax.persistence.*;
-import java.util.List;
 
 @Entity
 @Table(name="userEntry")
@@ -13,11 +12,14 @@ public class UserEntry {
 
     private String username;
 
+    private String hashedPassword;
+
     public UserEntry() {
     }
 
-    public UserEntry(String username) {
+    public UserEntry(String username, String hashedPassword) {
         this.username = username;
+        this.hashedPassword = hashedPassword;
     }
 
     public Long getId() {
@@ -28,4 +30,7 @@ public class UserEntry {
         return username;
     }
 
+    public String getHashedPassword() {
+        return hashedPassword;
+    }
 }

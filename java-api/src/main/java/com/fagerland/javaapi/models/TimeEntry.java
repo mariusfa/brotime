@@ -1,5 +1,7 @@
 package com.fagerland.javaapi.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 
 @Entity
@@ -12,6 +14,7 @@ public class TimeEntry {
     private long startStamp;
     private long endStamp;
 
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "userEntry_id", nullable = false)
     private UserEntry userEntry;
