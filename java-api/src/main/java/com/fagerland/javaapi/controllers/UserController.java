@@ -5,14 +5,11 @@ import com.fagerland.javaapi.pojo.LoginForm;
 import com.fagerland.javaapi.repositories.UserRepository;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
-import io.jsonwebtoken.impl.crypto.JwtSigner;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
 
@@ -51,24 +48,40 @@ public class UserController {
         boolean passwordMatch = passwordEncoder.matches(loginForm.getPassword(), userEntry.getHashedPassword());
 
         if (passwordMatch && usernameMatch(loginForm, userEntry)) {
-            Date now = new Date();
-            long validMilliSeconds = 3600000;
-            Date valid = new Date(now.getTime() + validMilliSeconds);
-
-            String token = Jwts.builder()
-                    .setClaims(Jwts.claims().setSubject(userEntry.getUsername()))
-                    .setIssuedAt(now)
-                    .setExpiration(valid)
-                    .signWith(SignatureAlgorithm.HS256, "secret")
-                    .compact();
-
+            String token = getJwtToken(userEntry);
             return ResponseEntity.ok(token);
         } else {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
     }
 
+
     private boolean usernameMatch(@RequestBody LoginForm loginForm, UserEntry userEntry) {
         return userEntry.getUsername().equals(loginForm.getUsername());
+    }
+
+    @GetMapping("/api/refresh")
+    public ResponseEntity refreshToken(Authentication authentication) {
+        String username = authentication.getName();
+        UserEntry userEntry = userRepository.findFirstByUsername(username);
+        if (userEntry != null) {
+            String token = getJwtToken(userEntry);
+            return ResponseEntity.ok(token);
+        } else {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+    }
+
+    private String getJwtToken(UserEntry userEntry) {
+        Date now = new Date();
+        long validMilliSeconds = 3600000;
+        Date valid = new Date(now.getTime() + validMilliSeconds);
+
+        return Jwts.builder()
+                .setClaims(Jwts.claims().setSubject(userEntry.getUsername()))
+                .setIssuedAt(now)
+                .setExpiration(valid)
+                .signWith(SignatureAlgorithm.HS256, "secret")
+                .compact();
     }
 }
