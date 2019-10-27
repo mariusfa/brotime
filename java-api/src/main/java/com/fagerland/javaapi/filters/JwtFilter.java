@@ -27,12 +27,9 @@ public class JwtFilter extends GenericFilterBean {
 
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
-
         HttpServletRequest req = (HttpServletRequest) servletRequest;
         String bearerToken = req.getHeader("Authorization");
-        if (bearerToken == null) {
-
-        } else {
+        if (bearerToken != null) {
             String token = bearerToken.substring(7, bearerToken.length());
 
             Jws<Claims> claims = Jwts.parser().setSigningKey("secret").parseClaimsJws(token);

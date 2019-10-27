@@ -53,8 +53,6 @@ public class UserController {
         boolean passwordMatch = passwordEncoder.matches(loginForm.getPassword(), userEntry.getHashedPassword());
 
         if (passwordMatch && usernameMatch(loginForm, userEntry)) {
-            // Generate token, todo
-
             Date now = new Date();
             long validMilliSeconds = 3600000;
             Date valid = new Date(now.getTime() + validMilliSeconds);
