@@ -4,6 +4,9 @@ import com.fagerland.javaapi.models.TimeEntry;
 import com.fagerland.javaapi.models.UserEntry;
 import com.fagerland.javaapi.repositories.TimeRepository;
 import com.fagerland.javaapi.repositories.UserRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.text.SimpleDateFormat;
@@ -13,6 +16,8 @@ import java.util.List;
 @CrossOrigin
 @RestController
 public class TimeController {
+
+    Logger logger = LoggerFactory.getLogger(TimeController.class);
 
     private final TimeRepository timeRepository;
     private final UserRepository userRepository;
@@ -25,9 +30,9 @@ public class TimeController {
     }
 
     @GetMapping("/api/time")
-    public List<TimeEntry> getTime() {
-        String username = "test";
-        UserEntry userEntry = userRepository.findFirstByUsername(username);
+    public List<TimeEntry> getTime(Authentication authentication) {
+        String name = authentication.getName();
+        UserEntry userEntry = userRepository.findFirstByUsername(name);
         return timeRepository.findAllByUserEntryId(userEntry.getId());
     }
 
