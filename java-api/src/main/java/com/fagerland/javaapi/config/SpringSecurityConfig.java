@@ -25,6 +25,7 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                     .authorizeRequests()
                     .antMatchers("/api/user/**").permitAll()
+                    .antMatchers("/healthy").permitAll()
                     .anyRequest().authenticated()
                 .and()
                 .apply(new JwtConfig());
