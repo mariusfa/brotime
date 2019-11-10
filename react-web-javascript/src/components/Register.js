@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 import Container from "@material-ui/core/Container";
 import Typography from "@material-ui/core/Typography";
@@ -26,13 +26,77 @@ const CustomForm = styled.form`
 `;
 
 export default function Register() {
+  const [passwordErrorMessage, setPasswordErrorMessage] = useState("");
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [repeatPassword, setRepeatPassword] = useState("");
+
+  const handleUsernameChange = event => {
+    setUsername(event.target.value);
+  };
+
+  const handlePasswordChange = event => {
+    const passwordNewValue = event.target.value;
+    setPassword(event.target.value);
+    comparePasswords(passwordNewValue, repeatPassword);
+  };
+
+  const handleRepeatPasswordChange = event => {
+    const repeatPasswordNewValue = event.target.value;
+    setRepeatPassword(repeatPasswordNewValue);
+    comparePasswords(password, repeatPasswordNewValue);
+  };
+
+  const comparePasswords = (password, repeatPassword) => {
+    if (
+      password.length > 0 &&
+      repeatPassword.length > 0 &&
+      password !== repeatPassword
+    ) {
+      setPasswordErrorMessage("Password mismatch");
+    } else {
+      setPasswordErrorMessage("");
+    }
+  };
+
+  const handleSubmit = async event => {
+    event.preventDefault();
+    console.log("hello");
+    if (
+      password.length > 0 &&
+      repeatPassword.length > 0 &&
+      password === repeatPassword
+    ) {
+      try {
+        const response = await fetch(
+          "http://localhost:8080/api/user/register",
+          {
+            method: "post",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              username: username,
+              password: password
+            })
+          }
+        );
+        if (!response.ok) {
+          throw Error(response.statusText);
+        }
+        const responseJson = await response.json();
+        console.log(responseJson);
+      } catch (error) {
+        console.log(error);
+      }
+    }
+  };
+
   return (
     <Container component="main" maxWidth="xs">
       <CustomContainer>
         <Typography component="h1" variant="h5">
           Sign up
         </Typography>
-        <CustomForm>
+        <CustomForm onSubmit={handleSubmit}>
           <TextField
             variant="outlined"
             margin="normal"
@@ -43,6 +107,8 @@ export default function Register() {
             name="username"
             autoComplete="username"
             autoFocus
+            onChange={handleUsernameChange}
+            value={username}
           />
           <TextField
             variant="outlined"
@@ -54,17 +120,23 @@ export default function Register() {
             type="password"
             id="password"
             autoComplete="current-password"
+            onChange={handlePasswordChange}
+            value={password}
           />
           <TextField
             variant="outlined"
             margin="normal"
             required
             fullWidth
-            name="password2"
+            name="repeatPassword"
             label="Password"
             type="password"
-            id="password2"
+            id="repeatPassword"
             autoComplete="current-password"
+            error={passwordErrorMessage.length > 0}
+            helperText={passwordErrorMessage}
+            onChange={handleRepeatPasswordChange}
+            value={repeatPassword}
           />
           <CustomSignUpButton
             type="submit"
