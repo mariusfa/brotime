@@ -25,23 +25,26 @@ const createData = (start, end) => {
 export default function Home() {
   const [timeList, setTimeList] = useState([]);
 
-  useEffect(async () => {
-    try {
-      const response = await fetch("http://localhost:8080/api/time", {
-        headers: { "Content-Type": "application/json" }
-      });
-      if (!response.ok) {
-        throw Error(response.statusText);
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        const response = await fetch("http://localhost:8080/api/time", {
+          headers: { "Content-Type": "application/json" }
+        });
+        if (!response.ok) {
+          throw Error(response.statusText);
+        }
+        const responseJson = await response.json();
+        const newTimeList = responseJson.map(item =>
+          createData(item.startStamp, item.endStamp)
+        );
+        console.log(newTimeList);
+        setTimeList(newTimeList);
+      } catch (error) {
+        console.log(error);
       }
-      const responseJson = await response.json();
-      const newTimeList = responseJson.map(item =>
-        createData(item.startStamp, item.endStamp)
-      );
-      console.log(newTimeList);
-      setTimeList(newTimeList);
-    } catch (error) {
-      console.log(error);
     }
+    fetchData();
   }, []);
 
   return (
