@@ -1,5 +1,6 @@
 package com.fagerland.brotime.controllers
 
+import com.fagerland.brotime.dto.TotalDiffDto
 import com.fagerland.brotime.models.TimeEntry
 import org.springframework.web.bind.annotation.CrossOrigin
 import org.springframework.web.bind.annotation.GetMapping
@@ -24,10 +25,15 @@ class MockController {
             val startOfDay = LocalDateTime.now().with(LocalTime.MIN).atZone(ZoneId.systemDefault()).toInstant().toEpochMilli() - 24*ONE_HOUR*i
             val workStart = startOfDay + ONE_HOUR*7 + Random.nextLong((ONE_HOUR*2).toLong())
             val workEnd = workStart + ONE_HOUR*7 + Random.nextLong((ONE_HOUR*2).toLong())
-            val newEntry = TimeEntry(workStart, workEnd, timeZone);
+            val newEntry = TimeEntry(workStart, workEnd, timeZone, i.toString());
             timeList.add(newEntry)
 
         }
         return timeList
+    }
+
+    @GetMapping("/mock/total_diff")
+    fun getTotalDiffTime(): TotalDiffDto {
+        return TotalDiffDto(3647_000)
     }
 }

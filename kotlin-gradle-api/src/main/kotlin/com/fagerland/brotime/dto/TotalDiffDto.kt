@@ -1,5 +1,5 @@
 package com.fagerland.brotime.dto
 
-class TotalDto(val totalDiff: Int) {
+class TotalDiffDto(val totalDiff: Int) {
 
 }

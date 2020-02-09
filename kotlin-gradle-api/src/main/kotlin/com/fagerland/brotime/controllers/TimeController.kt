@@ -12,7 +12,7 @@ class TimeController {
 
     @GetMapping("/api/time")
     fun getTime(): String {
-        var te = TimeEntry(1, 1, "test")
+        var te = TimeEntry(1, 1, "test", "1")
         return te.startTime.toString()
     }
 
