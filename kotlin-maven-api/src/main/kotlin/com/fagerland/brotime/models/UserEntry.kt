@@ -8,7 +8,7 @@ data class UserEntry(
         var username: String?,
         var hashedPassword: String,
         @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+        @GeneratedValue(strategy = GenerationType.AUTO)
         var id: Long? = null
 )
 
