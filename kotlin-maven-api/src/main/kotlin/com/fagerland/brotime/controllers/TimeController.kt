@@ -88,8 +88,11 @@ class TimeController @Autowired constructor(
         var timeDiff: Long = 0
         if  (userEntry != null) {
             val timeEntries: List<TimeEntry> = timeRepository.findAllByUserEntryId(userEntry.id)
-            for (item in timeEntries) {
-                timeDiff += item.endTime!! - item.startTime!!
+            if (timeEntries.size > 0) {
+                for (item in timeEntries) {
+                    timeDiff += item.endTime!! - item.startTime!!
+                }
+                timeDiff = timeDiff/timeEntries.size
             }
         }
         return DiffDTO(timeDiff)
