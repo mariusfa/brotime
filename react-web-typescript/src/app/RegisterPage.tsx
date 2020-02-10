@@ -8,16 +8,20 @@ const RegisterPage = () => {
 
     const handleOnSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault()
-        console.log(username)
-        console.log(password)
-        console.log(repeatPassword)
-        const data = {
-            "username": username,
-            "password": password
+        if (password === repeatPassword) {
+            const data = {
+                "username": username,
+                "password": password
+            }
+            const result = await PostData("http://localhost:8080/api/user/register", data)
+            if (result.ok) {
+                alert("Register success. Please sign in")
+            } else {
+                alert("Register failed")
+            }
+        } else {
+            alert("passwords mismatch")
         }
-        const result = await PostData("http://localhost:8080/api/user/regiser", data)
-        console.log("result: ")
-        console.log(result)
     }
 
     return (
