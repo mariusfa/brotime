@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.*
 class TimeController @Autowired constructor(
         val userRepository: UserRepository,
         val timeRepository: TimeRepository
-){
+) {
     @GetMapping("/api/time/all")
     fun getTimes(authentication: Authentication): List<TimeEntry> {
         val userEntry: UserEntry? = getUserEntry(authentication)
@@ -44,7 +44,8 @@ class TimeController @Autowired constructor(
     fun updateEndTime(authentication: Authentication, @RequestBody endTimeForm: EndTimeForm): ResponseEntity<String> {
         val userEntry: UserEntry? = getUserEntry(authentication)
         if (userEntry != null) {
-            val timeEntry: TimeEntry? = timeRepository.findFirstByUserEntryIdOrderByStartTimeDesc(userEntry.id)
+            val timeEntry: TimeEntry? = timeRepository.findByUserEntryIdOrderByStartTimeDesc(userEntry.id)
+            //val timeEntry: TimeEntry? = null
             if (timeEntry != null) {
                 timeEntry.endTime = endTimeForm.endTime
                 timeRepository.save(timeEntry)
@@ -58,7 +59,7 @@ class TimeController @Autowired constructor(
     fun editTimeEntry(authentication: Authentication, @RequestBody timeForm: TimeForm): ResponseEntity<String> {
         val userEntry: UserEntry? = getUserEntry(authentication)
         if (userEntry != null) {
-            val timeEntry: TimeEntry? = timeRepository.findFirstByIdAndByUserEntryId(timeForm.id, userEntry.id)
+            val timeEntry: TimeEntry? = timeRepository.findByIdAndUserEntryId(timeForm.id, userEntry.id)
             if (timeEntry != null) {
                 timeEntry.startTime = timeForm.startTime
                 timeEntry.endTime = timeForm.endTime
@@ -73,11 +74,11 @@ class TimeController @Autowired constructor(
     fun deleteTimeEntry(authentication: Authentication, @PathVariable timeId: Long): ResponseEntity<String> {
         val userEntry: UserEntry? = getUserEntry(authentication)
         if (userEntry != null) {
-            val timeEntry: TimeEntry? = timeRepository.findFirstByIdAndByUserEntryId(timeId, userEntry.id)
-           if (timeEntry != null) {
-               timeRepository.delete(timeEntry)
-               return ResponseEntity.status(HttpStatus.OK).build()
-           }
+            val timeEntry: TimeEntry? = timeRepository.findByIdAndUserEntryId(timeId, userEntry.id)
+            if (timeEntry != null) {
+                timeRepository.delete(timeEntry)
+                return ResponseEntity.status(HttpStatus.OK).build()
+            }
         }
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).build()
     }
@@ -86,13 +87,13 @@ class TimeController @Autowired constructor(
     fun getDiff(authentication: Authentication): DiffDTO {
         val userEntry: UserEntry? = getUserEntry(authentication)
         var timeDiff: Long = 0
-        if  (userEntry != null) {
+        if (userEntry != null) {
             val timeEntries: List<TimeEntry> = timeRepository.findAllByUserEntryId(userEntry.id)
             if (timeEntries.size > 0) {
                 for (item in timeEntries) {
                     timeDiff += item.endTime!! - item.startTime!!
                 }
-                timeDiff = timeDiff/timeEntries.size
+                timeDiff = timeDiff / timeEntries.size
             }
         }
         return DiffDTO(timeDiff)

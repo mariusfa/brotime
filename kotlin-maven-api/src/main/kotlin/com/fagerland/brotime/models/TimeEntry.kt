@@ -10,9 +10,7 @@ class TimeEntry(
         var endTime: Long?,
         var timeZone: String?,
 
-        @JsonIgnore
         @ManyToOne
-        @JoinColumn(name = "userEntry_id", nullable = false)
         var userEntry: UserEntry,
 
         @Id
