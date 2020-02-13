@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import getDataAuth from '../api/GetDataAuth'
 import postDataAuth from '../api/PostDataAuth'
-import { API_DIFF_URL, API_POST_TIME_URL } from '../constants';
+import putDataAuth from '../api/PutDataAuth'
+import { API_DIFF_URL, API_POST_TIME_URL, API_PUT_TIME_URL } from '../constants';
 import { useHistory } from 'react-router';
 import { async } from 'q';
 
@@ -40,8 +41,18 @@ const HomePage = () => {
         }
     }
 
-    const handleCheckOut = () => {
+    const handleCheckOut = async () => {
         console.log('Check out')
+        const newEndTime = new Date().getTime()
+        const body = {
+            'endTime': newEndTime
+        }
+
+        const storedToken = localStorage.getItem('token')
+        if (storedToken) {
+            const response = await putDataAuth(API_PUT_TIME_URL, body, storedToken)
+            console.log(response)
+        }
     }
 
     return (
