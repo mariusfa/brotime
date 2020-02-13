@@ -20,6 +20,7 @@ class TimeController @Autowired constructor(
         val userRepository: UserRepository,
         val timeRepository: TimeRepository
 ) {
+
     @GetMapping("/api/time/all")
     fun getTimes(authentication: Authentication): List<TimeEntry> {
         val userEntry: UserEntry? = getUserEntry(authentication)
@@ -91,9 +92,9 @@ class TimeController @Autowired constructor(
             val timeEntries: List<TimeEntry> = timeRepository.findAllByUserEntryId(userEntry.id)
             if (timeEntries.size > 0) {
                 for (item in timeEntries) {
-                    timeDiff += item.endTime!! - item.startTime!!
+                    timeDiff += item.endTime!! - item.startTime!! - 8*3600_000
                 }
-                timeDiff = timeDiff / timeEntries.size
+                timeDiff /= timeEntries.size
             }
         }
         return DiffDTO(timeDiff)

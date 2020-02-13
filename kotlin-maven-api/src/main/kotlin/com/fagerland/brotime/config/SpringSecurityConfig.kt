@@ -21,7 +21,7 @@ class SpringSecurityConfig : WebSecurityConfigurerAdapter() {
 
     @Throws(Exception::class)
     protected override fun configure(httpSecurity: HttpSecurity) {
-       httpSecurity
+       httpSecurity.cors().and()
                .httpBasic().disable()
                .csrf().disable()
                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
