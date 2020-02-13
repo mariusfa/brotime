@@ -1,29 +1,28 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import getDataAuth from '../api/GetDataAuth'
 import postDataAuth from '../api/PostDataAuth'
 import putDataAuth from '../api/PutDataAuth'
 import { API_DIFF_URL, API_POST_TIME_URL, API_PUT_TIME_URL } from '../constants';
 import { useHistory } from 'react-router';
-import { async } from 'q';
 
 const HomePage = () => {
     const [timeDiff, setTimeDiff] = useState<Number>(0)
     const history = useHistory()
 
-    useEffect(() => {
-        const getDiff = async () => {
-            const storedToken = localStorage.getItem('token')
-            if (storedToken) {
-                const diffData = await getDataAuth(API_DIFF_URL, storedToken);
-                const diffJson = await diffData.json()
-                setTimeDiff(diffJson.timeDiff)
-            } else {
-                history.push('/login')
-            }
+    const getDiff = useCallback(async () => {
+        const storedToken = localStorage.getItem('token')
+        if (storedToken) {
+            const diffData = await getDataAuth(API_DIFF_URL, storedToken);
+            const diffJson = await diffData.json()
+            setTimeDiff(diffJson.timeDiff/3600_000)
+        } else {
+            history.push('/login')
         }
+    }, [history])
 
+    useEffect(() => {
         getDiff()
-    },[])
+    },[getDiff])
 
     const handleCheckIn = async () => {
         console.log('Check in')
@@ -36,7 +35,8 @@ const HomePage = () => {
 
         const storedToken = localStorage.getItem('token')
         if (storedToken) {
-            const response = await postDataAuth(API_POST_TIME_URL,body, storedToken)
+            const response = await postDataAuth(API_POST_TIME_URL, body, storedToken)
+            getDiff()
             console.log(response)
         }
     }
@@ -52,6 +52,7 @@ const HomePage = () => {
         if (storedToken) {
             const response = await putDataAuth(API_PUT_TIME_URL, body, storedToken)
             console.log(response)
+            getDiff()
         }
     }
 
