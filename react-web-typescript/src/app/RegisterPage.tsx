@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
-import { PostData } from '../api/PostData';
+import { postData } from '../api/PostData';
+import { API_REGISTER_URL } from '../constants';
 
 const RegisterPage = () => {
     const [username, setUsername] = useState("");
@@ -13,7 +14,7 @@ const RegisterPage = () => {
                 "username": username,
                 "password": password
             }
-            const result = await PostData("http://localhost:8080/api/user/register", data)
+            const result = await postData(API_REGISTER_URL, data)
             if (result.ok) {
                 alert("Register success. Please sign in")
             } else {

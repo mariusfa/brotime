@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { PostData } from '../api/PostData';
+import { postData } from '../api/PostData';
 import { useHistory } from 'react-router-dom';
+import { API_LOGIN_URL } from '../constants';
 
 const LoginPage = () => {
     const [username, setUsername] = useState("")
@@ -14,9 +15,10 @@ const LoginPage = () => {
             "password": password
         }
 
-        const response = await PostData("http://localhost:8080/api/user/login", data)
-        console.log(response);
+        const response = await postData(API_LOGIN_URL, data)
         if (response.ok) {
+            const token = await response.text()
+            localStorage.setItem('token', token)
             history.push("/");
         } else {
             alert("Login failed")
