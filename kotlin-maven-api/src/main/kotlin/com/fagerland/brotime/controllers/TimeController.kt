@@ -45,7 +45,7 @@ class TimeController @Autowired constructor(
     fun updateEndTime(authentication: Authentication, @RequestBody endTimeForm: EndTimeForm): ResponseEntity<String> {
         val userEntry: UserEntry? = getUserEntry(authentication)
         if (userEntry != null) {
-            val timeEntry: TimeEntry? = timeRepository.findByUserEntryIdOrderByStartTimeDesc(userEntry.id)
+            val timeEntry: TimeEntry? = timeRepository.findFirstByUserEntryIdOrderByStartTimeDesc(userEntry.id)
             //val timeEntry: TimeEntry? = null
             if (timeEntry != null) {
                 timeEntry.endTime = endTimeForm.endTime
@@ -60,7 +60,7 @@ class TimeController @Autowired constructor(
     fun editTimeEntry(authentication: Authentication, @RequestBody timeForm: TimeForm): ResponseEntity<String> {
         val userEntry: UserEntry? = getUserEntry(authentication)
         if (userEntry != null) {
-            val timeEntry: TimeEntry? = timeRepository.findByIdAndUserEntryId(timeForm.id, userEntry.id)
+            val timeEntry: TimeEntry? = timeRepository.findFirstByIdAndUserEntryId(timeForm.id, userEntry.id)
             if (timeEntry != null) {
                 timeEntry.startTime = timeForm.startTime
                 timeEntry.endTime = timeForm.endTime
@@ -75,7 +75,7 @@ class TimeController @Autowired constructor(
     fun deleteTimeEntry(authentication: Authentication, @PathVariable timeId: Long): ResponseEntity<String> {
         val userEntry: UserEntry? = getUserEntry(authentication)
         if (userEntry != null) {
-            val timeEntry: TimeEntry? = timeRepository.findByIdAndUserEntryId(timeId, userEntry.id)
+            val timeEntry: TimeEntry? = timeRepository.findFirstByIdAndUserEntryId(timeId, userEntry.id)
             if (timeEntry != null) {
                 timeRepository.delete(timeEntry)
                 return ResponseEntity.status(HttpStatus.OK).build()
@@ -94,7 +94,6 @@ class TimeController @Autowired constructor(
                 for (item in timeEntries) {
                     timeDiff += item.endTime!! - item.startTime!! - 8*3600_000
                 }
-                timeDiff /= timeEntries.size
             }
         }
         return DiffDTO(timeDiff)

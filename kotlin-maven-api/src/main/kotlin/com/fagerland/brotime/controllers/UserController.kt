@@ -23,7 +23,6 @@ class UserController @Autowired constructor(
 
     @PostMapping("/api/user/register")
     fun registerUser(@RequestBody loginForm: LoginForm): ResponseEntity<String> {
-        println("inn")
         val userEntry: UserEntry? = userRepository.findFirstByUsername(loginForm.username)
         if (userEntry == null) {
             val passwordEncoder: BCryptPasswordEncoder = BCryptPasswordEncoder()
