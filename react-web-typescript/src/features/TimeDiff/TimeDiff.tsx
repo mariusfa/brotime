@@ -17,12 +17,14 @@ const TimeDiff = () => {
     const [timeDiff, setTimeDiff] = useState<number>(0)
 
     const getDiff = useCallback(async () => {
-        const storedToken = localStorage.getItem('item');
+        console.log("test")
+        const storedToken = localStorage.getItem('token');
         if (storedToken) {
             const response = await getDataAuth(API_DIFF_URL, storedToken);
             if (response.ok) {
                 const timeDiffResponse = await response.json();
-                setTimeDiff(timeDiffResponse / HOUR_MILLIS);
+                console.log(timeDiffResponse)
+                setTimeDiff(timeDiffResponse.timeDiff / HOUR_MILLIS);
             }
         }
 
