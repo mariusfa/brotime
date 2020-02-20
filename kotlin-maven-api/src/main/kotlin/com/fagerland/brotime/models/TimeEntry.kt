@@ -10,6 +10,7 @@ class TimeEntry(
         var endTime: Long?,
         var timeZone: String?,
 
+        @JsonIgnore
         @ManyToOne
         var userEntry: UserEntry,
 
