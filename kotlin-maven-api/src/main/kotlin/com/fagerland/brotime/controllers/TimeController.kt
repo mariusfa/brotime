@@ -30,6 +30,18 @@ class TimeController @Autowired constructor(
         return emptyList()
     }
 
+    @GetMapping("/api/time")
+    fun getLatestTime(authentication: Authentication): ResponseEntity<TimeEntry> {
+        val userEntry: UserEntry? = getUserEntry(authentication)
+        if (userEntry != null) {
+            val timeEntry: TimeEntry? = timeRepository.findFirstByUserEntryIdOrderByStartTimeDesc(userEntry.id)
+            if (timeEntry !=null) {
+                return ResponseEntity.ok(timeEntry)
+            }
+        }
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+    }
+
     @PostMapping("/api/time")
     fun postTime(authentication: Authentication, @RequestBody registerTimeForm: RegisterTimeForm): ResponseEntity<String> {
         val userEntry: UserEntry? = getUserEntry(authentication)
