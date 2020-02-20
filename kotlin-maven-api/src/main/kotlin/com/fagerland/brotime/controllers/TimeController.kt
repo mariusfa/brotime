@@ -25,7 +25,7 @@ class TimeController @Autowired constructor(
     fun getTimes(authentication: Authentication): List<TimeEntry> {
         val userEntry: UserEntry? = getUserEntry(authentication)
         if (userEntry != null) {
-            return timeRepository.findAllByUserEntryId(userEntry.id)
+            return timeRepository.findAllByUserEntryIdOrderByStartTimeDesc(userEntry.id)
         }
         return emptyList()
     }
@@ -101,7 +101,7 @@ class TimeController @Autowired constructor(
         val userEntry: UserEntry? = getUserEntry(authentication)
         var timeDiff: Long = 0
         if (userEntry != null) {
-            val timeEntries: List<TimeEntry> = timeRepository.findAllByUserEntryId(userEntry.id)
+            val timeEntries: List<TimeEntry> = timeRepository.findAllByUserEntryIdOrderByStartTimeDesc(userEntry.id)
             if (timeEntries.size > 0) {
                 for (item in timeEntries) {
                     timeDiff += item.endTime!! - item.startTime!! - 8*3600_000
