@@ -1,36 +1,40 @@
-import React, { useState, useEffect } from 'react';
-import { fetchData } from '../api/FetchData';
-import { API_URL } from '../constants';
+import React, { useState, useEffect, useCallback } from 'react';
+import { API_OVERVIEW_URL } from '../constants';
 import { ListEntries } from '../features/ListEntries';
-import { formatDate } from '../util/DateUtils';
+import getDataAuth from '../api/GetDataAuth';
 
 
 const OverviewPage = () => {
-  const [timeEntries, setTimeEntries] = useState<any>([]);
+    const [timeEntries, setTimeEntries] = useState<any>([]);
 
-  useEffect(() => {
-    const getData = async () => {
-      const data = await fetchData(API_URL);
-      const transformedData = dataTransformer(data);
-      setTimeEntries(transformedData);
-    }
-
-    const dataTransformer = (data: any) => {
-      return data.map(({ startTime, endTime, ...rest }: any) => {
-        return {
-          'startTime': formatDate(startTime),
-          'endTime': formatDate(endTime),
-          ...rest
+    const getData = useCallback(async () => {
+        const storedToken = localStorage.getItem('token');
+        if (storedToken) {
+            const response = await getDataAuth(API_OVERVIEW_URL, storedToken);
+            if (response.ok) {
+                const responseJson = await response.json();
+                setTimeEntries(responseJson);
+            }
         }
-      })
-    }
+    }, [])
 
-    getData();
-  }, [])
+    // const dataTransformer = (data: any) => {
+    //     return data.map(({ startTime, endTime, ...rest }: any) => {
+    //         return {
+    //             'startTime': formatDate(startTime),
+    //             'endTime': formatDate(endTime),
+    //             ...rest
+    //         }
+    //     })
+    // }
 
-  return (
-      <ListEntries entries={timeEntries} />
-  );
+    useEffect(() => {
+        getData();
+    }, [getData])
+
+    return (
+        <ListEntries entries={timeEntries} />
+    );
 }
 
 export default OverviewPage;
