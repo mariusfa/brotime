@@ -1,25 +1,18 @@
 import React from 'react';
 import styled from '@emotion/styled';
-
-const StyledDate = styled.span`
-  padding: 0.1rem;
-  margin: 0.1rem;
-`;
+import { Entry } from '../Entry';
 
 const ListEntries = ({ entries }: any) => {
 
-  const entriesView = entries.map((item: any) =>
-    <div key={item.id}>
-      <StyledDate>{item.startTime}</StyledDate>
-      <StyledDate>{item.endTime}</StyledDate>
-    </div>
-  );
+    const entriesView = entries.map((item: any) =>
+        <Entry key={item.id} entry={item} />
+    );
 
-  return (
-    <div>
-      {entriesView}
-    </div>
-  );
+    return (
+        <div>
+            {entriesView}
+        </div>
+    );
 }
 
 export default ListEntries;

@@ -86,7 +86,7 @@ const HomePage = () => {
             <div>tilgode</div>
             <div>{timeDiff}</div>
             {latestTimeEntry &&
-                <Entry entry={latestTimeEntry} label="latest" />
+                <Entry entry={latestTimeEntry} label="LATEST" />
             }
         </div>
     );
