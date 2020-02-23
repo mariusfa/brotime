@@ -7,6 +7,7 @@ import getDataAuth from '../../api/GetDataAuth';
 import { API_DIFF_URL } from '../../constants';
 
 const HOUR_MILLIS = 3600_000;
+const NUMBER_OF_DECIMALS = 2;
 
 const TilGodeContainer = styled.div`
     margin: 0.5rem;
@@ -14,7 +15,7 @@ const TilGodeContainer = styled.div`
 `;
 
 const TimeDiff = () => {
-    const [timeDiff, setTimeDiff] = useState<number>(0)
+    const [timeDiff, setTimeDiff] = useState<number>(0);
 
     const getDiff = useCallback(async () => {
         console.log("test")
@@ -39,7 +40,7 @@ const TimeDiff = () => {
         <TilGodeContainer>
             <StyledCard>
                 <StyledLabel>FLEX</StyledLabel>
-                <StyledField>{timeDiff}</StyledField>
+                <StyledField>{timeDiff.toFixed(NUMBER_OF_DECIMALS)}</StyledField>
             </StyledCard>
         </TilGodeContainer>
     );
