@@ -18,18 +18,14 @@ const TimeDiff = () => {
     const [timeDiff, setTimeDiff] = useState<number>(0);
 
     const getDiff = useCallback(async () => {
-        console.log("test")
         const storedToken = localStorage.getItem('token');
         if (storedToken) {
             const response = await getDataAuth(API_DIFF_URL, storedToken);
             if (response.ok) {
                 const timeDiffResponse = await response.json();
-                console.log(timeDiffResponse)
                 setTimeDiff(timeDiffResponse.timeDiff / HOUR_MILLIS);
             }
         }
-
-
     }, [])
 
     useEffect(() => {
