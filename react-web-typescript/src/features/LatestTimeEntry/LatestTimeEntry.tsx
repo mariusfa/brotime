@@ -19,7 +19,7 @@ const LatestTimeEntry = () => {
 
     useEffect(() => {
         getLatestEntry();
-    }, [])
+    }, [getLatestEntry])
 
     return(
         <div>
