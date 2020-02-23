@@ -1,25 +1,11 @@
 import React from 'react';
-import postDataAuth from '../api/PostDataAuth';
 import putDataAuth from '../api/PutDataAuth';
-import { API_POST_TIME_URL, API_PUT_TIME_URL } from '../constants';
+import { API_PUT_TIME_URL } from '../constants';
 import { TimeDiff } from '../features/TimeDiff'
 import { LatestTimeEntry } from '../features/LatestTimeEntry';
+import { CheckInAction } from '../features/Actions';
 
 const HomePage = () => {
-
-    const handleCheckIn = async () => {
-        const timeStamp = new Date().getTime();
-        const timeZone = "Europe/Berlin";
-        const body = {
-            'timeStamp': timeStamp,
-            'timeZone': timeZone
-        }
-
-        const storedToken = localStorage.getItem('token');
-        if (storedToken) {
-            const response = await postDataAuth(API_POST_TIME_URL, body, storedToken)
-        }
-    }
 
     const handleCheckOut = async () => {
         const newEndTime = new Date().getTime();
@@ -35,7 +21,7 @@ const HomePage = () => {
 
     return (
         <div>
-            <button onClick={handleCheckIn}>Check in</button>
+            <CheckInAction />
             <button onClick={handleCheckOut}>Check out</button>
             <TimeDiff/>
             <LatestTimeEntry/>
