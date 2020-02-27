@@ -1,8 +1,10 @@
 package com.fagerland.brotime.controllers
 
 import com.fagerland.brotime.forms.LoginForm
+import com.fagerland.brotime.forms.TokenForm
 import com.fagerland.brotime.models.UserEntry
 import com.fagerland.brotime.repositories.UserRepository
+import com.fagerland.brotime.services.UserService
 import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.SignatureAlgorithm
 import org.springframework.beans.factory.annotation.Autowired
@@ -18,7 +20,8 @@ import java.util.*
 @CrossOrigin
 @RestController
 class UserController @Autowired constructor(
-        val userRepository: UserRepository
+        val userRepository: UserRepository,
+        val userService: UserService
 ) {
 
     @PostMapping("/api/user/register")
@@ -51,6 +54,11 @@ class UserController @Autowired constructor(
         } else {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build()
         }
+    }
+
+    @PostMapping("/api/user/validate")
+    fun validateToken(@RequestBody tokenForm: TokenForm): Boolean {
+        return userService.validateToken(tokenForm.token)
     }
 
     private fun getJwtToken(userEntry: UserEntry): String {
