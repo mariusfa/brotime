@@ -10,12 +10,12 @@ import java.util.*
 class UserService {
 
     fun validateToken(bearerToken: String?): Boolean {
-        try {
+        return try {
             val token = bearerToken?.substring(7, bearerToken.length)
             val claims: Jws<Claims> = Jwts.parser().setSigningKey("secret").parseClaimsJws(token)
-            return claims.body.expiration.after(Date())
+            claims.body.expiration.after(Date())
         } catch (e: Exception) {
-            return false
+            false
         }
     }
 }
