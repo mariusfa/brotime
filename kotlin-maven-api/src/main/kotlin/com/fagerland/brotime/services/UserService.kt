@@ -9,9 +9,8 @@ import java.util.*
 @Service
 class UserService {
 
-    fun getUsernameFromToken(bearerToken: String?): String? {
+    fun getUsernameFromToken(token: String?): String? {
         return try {
-            val token = bearerToken?.substring(7, bearerToken.length)
             val claims: Jws<Claims> = Jwts.parser().setSigningKey("secret").parseClaimsJws(token)
             if (claims.body.expiration.after(Date())) {
                 claims.body.subject
