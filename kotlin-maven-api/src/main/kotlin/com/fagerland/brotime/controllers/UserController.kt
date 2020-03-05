@@ -57,9 +57,9 @@ class UserController @Autowired constructor(
     }
 
     @PostMapping("/api/user/validate")
-    fun validateToken(@RequestBody tokenForm: TokenForm): Boolean {
-        return userService.validateToken(tokenForm.token)
-    }
+    fun validateToken(@RequestBody tokenForm: TokenForm): Boolean =
+        userService.getUsernameFromToken(tokenForm.token) != null
+
 
     private fun getJwtToken(userEntry: UserEntry): String {
         val now = Date()
