@@ -7,6 +7,20 @@
 	"item": [
 		{
 			"name": "create user",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "f2984676-44f4-4b96-beca-a52e8abdd187",
+						"exec": [
+							"pm.test(\"Status test\", function () {",
+							"   pm.response.to.have.status(201); ",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
 			"request": {
 				"method": "POST",
 				"header": [
@@ -45,8 +59,12 @@
 					"script": {
 						"id": "4c5ade1a-dcbe-4181-ab25-e16e96de2308",
 						"exec": [
-							"const token = responseBody",
-							"postman.setEnvironmentVariable(\"token\", token)"
+							"pm.test(\"Status test\", function() {",
+							"    pm.response.to.have.status(200);",
+							"})",
+							"",
+							"const token = responseBody;",
+							"postman.setEnvironmentVariable(\"token\", token);"
 						],
 						"type": "text/javascript"
 					}
@@ -84,6 +102,24 @@
 		},
 		{
 			"name": "validate user",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "aaf4e4fc-b67a-4f06-a028-d86d7a45f268",
+						"exec": [
+							"pm.test(\"Status test\", function() {",
+							"    pm.response.to.have.status(200);    ",
+							"})",
+							"",
+							"pm.test(\"Return true test\", function() {",
+							"    pm.expect(responseBody).to.equal(\"true\")",
+							"})"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
 			"request": {
 				"method": "POST",
 				"header": [
@@ -121,7 +157,7 @@
 				"header": [
 					{
 						"key": "Authentication",
-						"value": "{{token}}",
+						"value": "Bearer {{token}}",
 						"type": "text"
 					}
 				],
