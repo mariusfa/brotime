@@ -26,12 +26,7 @@ class UserController @Autowired constructor(
 
     @PostMapping("/api/user/register")
     fun registerUser(@RequestBody loginForm: LoginForm): ResponseEntity<String> {
-        val userEntry: UserEntry? = userRepository.findFirstByUsername(loginForm.username)
-        if (userEntry == null) {
-            val passwordEncoder: BCryptPasswordEncoder = BCryptPasswordEncoder()
-            val hashedPassword: String = passwordEncoder.encode(loginForm.password)
-            val newUserEntry: UserEntry = UserEntry(loginForm.username, hashedPassword);
-            userRepository.save(newUserEntry)
+        if (userService.registerUser(loginForm)) {
             return ResponseEntity.status(HttpStatus.CREATED).build()
         } else {
             return ResponseEntity.status(HttpStatus.CONFLICT).build();
