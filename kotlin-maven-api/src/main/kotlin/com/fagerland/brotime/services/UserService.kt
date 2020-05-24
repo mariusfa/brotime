@@ -1,6 +1,6 @@
 package com.fagerland.brotime.services
 
-import com.fagerland.brotime.forms.LoginForm
+import com.fagerland.brotime.dto.UserDTO
 import com.fagerland.brotime.models.UserEntry
 import com.fagerland.brotime.repositories.UserRepository
 import io.jsonwebtoken.Claims
@@ -18,26 +18,26 @@ class UserService @Autowired constructor(
 ) {
     val passwordEncoder = BCryptPasswordEncoder()
 
-    fun registerUser(loginForm: LoginForm): Boolean {
-        if (userRepository.findFirstByUsername(loginForm.username) != null) {
+    fun registerUser(userDTO: UserDTO): Boolean {
+        if (userRepository.findFirstByUsername(userDTO.username) != null) {
             return false
         }
-        val hashedPassword: String = passwordEncoder.encode(loginForm.password)
-        val newUserEntry = UserEntry(loginForm.username, hashedPassword)
+        val hashedPassword: String = passwordEncoder.encode(userDTO.password)
+        val newUserEntry = UserEntry(userDTO.username, hashedPassword)
         userRepository.save(newUserEntry)
         return true
     }
 
-    fun loginUser(loginForm: LoginForm): String? {
-        val existingUser = userRepository.findFirstByUsername(loginForm.username)
-        if (existingUser != null && isCredentialsValid(loginForm, existingUser)) {
+    fun loginUser(userDTO: UserDTO): String? {
+        val existingUser = userRepository.findFirstByUsername(userDTO.username)
+        if (existingUser != null && isCredentialsValid(userDTO, existingUser)) {
             return getJwtToken(existingUser)
         }
         return null
     }
 
-    private fun isCredentialsValid(loginForm: LoginForm, existingUser: UserEntry) =
-        passwordEncoder.matches(loginForm.password, existingUser.hashedPassword) && existingUser.username.equals(loginForm.username)
+    private fun isCredentialsValid(userDTO: UserDTO, existingUser: UserEntry) =
+        passwordEncoder.matches(userDTO.password, existingUser.hashedPassword) && existingUser.username.equals(userDTO.username)
 
     fun getUsernameFromToken(token: String?): String? {
         return try {

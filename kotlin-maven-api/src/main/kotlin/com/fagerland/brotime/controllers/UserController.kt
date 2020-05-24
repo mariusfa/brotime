@@ -1,6 +1,6 @@
 package com.fagerland.brotime.controllers
 
-import com.fagerland.brotime.forms.LoginForm
+import com.fagerland.brotime.dto.UserDTO
 import com.fagerland.brotime.forms.TokenForm
 import com.fagerland.brotime.services.UserService
 import org.springframework.beans.factory.annotation.Autowired
@@ -18,8 +18,8 @@ class UserController @Autowired constructor(
 ) {
 
     @PostMapping("/api/user/register")
-    fun registerUser(@RequestBody loginForm: LoginForm): ResponseEntity<String> {
-        return if (userService.registerUser(loginForm)) {
+    fun registerUser(@RequestBody userDTO: UserDTO): ResponseEntity<String> {
+        return if (userService.registerUser(userDTO)) {
             ResponseEntity.status(HttpStatus.CREATED).build()
         } else {
             ResponseEntity.status(HttpStatus.CONFLICT).build();
@@ -27,8 +27,8 @@ class UserController @Autowired constructor(
     }
 
     @PostMapping("/api/user/login")
-    fun loginUser(@RequestBody loginForm: LoginForm): ResponseEntity<String> {
-        val token = userService.loginUser(loginForm)
+    fun loginUser(@RequestBody userDTO: UserDTO): ResponseEntity<String> {
+        val token = userService.loginUser(userDTO)
         return if (token != null) {
             ResponseEntity.ok(token)
         } else {
