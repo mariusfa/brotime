@@ -8,6 +8,7 @@ import com.fagerland.brotime.models.TimeEntry
 import com.fagerland.brotime.models.UserEntry
 import com.fagerland.brotime.repositories.TimeRepository
 import com.fagerland.brotime.repositories.UserRepository
+import com.fagerland.brotime.services.TimeService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -25,39 +26,26 @@ import org.springframework.web.bind.annotation.RestController
 @RestController
 class TimeController @Autowired constructor(
         val userRepository: UserRepository,
-        val timeRepository: TimeRepository
+        val timeRepository: TimeRepository,
+        val timeService: TimeService
 ) {
 
     @GetMapping("/api/time/all")
     fun getTimes(authentication: Authentication): List<TimeEntry> {
         val userEntry: UserEntry? = getUserEntry(authentication)
-        if (userEntry != null) {
-            return timeRepository.findAllByUserEntryIdOrderByStartTimeDesc(userEntry.id)
-        }
-        return emptyList()
+        return timeService.getTimes(userEntry);
     }
 
     @GetMapping("/api/time")
     fun getLatestTime(authentication: Authentication): ResponseEntity<TimeEntry> {
         val userEntry: UserEntry? = getUserEntry(authentication)
-        if (userEntry != null) {
-            val timeEntry: TimeEntry? = timeRepository.findFirstByUserEntryIdOrderByStartTimeDesc(userEntry.id)
-            if (timeEntry !=null) {
-                return ResponseEntity.ok(timeEntry)
-            }
-        }
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        return timeService.getLatestTime(userEntry)
     }
 
     @PostMapping("/api/time")
     fun postTime(authentication: Authentication, @RequestBody registerTimeForm: RegisterTimeForm): ResponseEntity<String> {
         val userEntry: UserEntry? = getUserEntry(authentication)
-        if (userEntry != null) {
-            val timeEntry: TimeEntry = TimeEntry(registerTimeForm.timeStamp, registerTimeForm.timeStamp, registerTimeForm.timeZone, userEntry)
-            timeRepository.save(timeEntry)
-            return ResponseEntity.status(HttpStatus.CREATED).build()
-        }
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).build()
+        return timeService.insertTime(userEntry, registerTimeForm)
     }
 
     @PutMapping("/api/time/endtime")
@@ -78,16 +66,7 @@ class TimeController @Autowired constructor(
     @PutMapping("/api/time")
     fun editTimeEntry(authentication: Authentication, @RequestBody timeForm: TimeForm): ResponseEntity<String> {
         val userEntry: UserEntry? = getUserEntry(authentication)
-        if (userEntry != null) {
-            val timeEntry: TimeEntry? = timeRepository.findFirstByIdAndUserEntryId(timeForm.id, userEntry.id)
-            if (timeEntry != null) {
-                timeEntry.startTime = timeForm.startTime
-                timeEntry.endTime = timeForm.endTime
-                timeEntry.timeZone = timeForm.timeZone
-                return ResponseEntity.status(HttpStatus.OK).build()
-            }
-        }
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).build()
+        return timeService.updateEndTime(userEntry,timeForm)
     }
 
     @DeleteMapping("/api/time/{timeId}")
@@ -123,6 +102,4 @@ class TimeController @Autowired constructor(
         val userEntry: UserEntry? = userRepository.findFirstByUsername(name)
         return userEntry
     }
-
-
 }
