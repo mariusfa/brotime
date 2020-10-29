@@ -28,12 +28,12 @@ class TimeService @Autowired constructor(
                 return ResponseEntity.ok(timeEntry)
             }
         }
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).build()
     }
 
     fun insertTime(userEntry: UserEntry?, timeEntryDto: RegisterTimeForm): ResponseEntity<String> {
         if (userEntry != null) {
-            val timeEntry: TimeEntry = TimeEntry(timeEntryDto.timeStamp, timeEntryDto.timeStamp, timeEntryDto.timeZone, userEntry)
+            val timeEntry = TimeEntry(timeEntryDto.timeStamp, timeEntryDto.timeStamp, timeEntryDto.timeZone, userEntry)
             timeRepository.save(timeEntry)
             return ResponseEntity.status(HttpStatus.CREATED).build()
         }
@@ -47,9 +47,21 @@ class TimeService @Autowired constructor(
                 timeEntry.startTime = timeForm.startTime
                 timeEntry.endTime = timeForm.endTime
                 timeEntry.timeZone = timeForm.timeZone
+                timeRepository.save(timeEntry)
                 return ResponseEntity.status(HttpStatus.OK).build()
             }
         }
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).build()
+    }
+
+    fun deleteTimeEntry(userEntry: UserEntry?, timeEntryId: Long): Boolean {
+        if (userEntry != null) {
+            val timeEntry: TimeEntry? = timeRepository.findFirstByIdAndUserEntryId(timeEntryId, userEntry.id)
+            if (timeEntry != null) {
+                timeRepository.delete(timeEntry)
+                return true
+            }
+        }
+        return false
     }
 }

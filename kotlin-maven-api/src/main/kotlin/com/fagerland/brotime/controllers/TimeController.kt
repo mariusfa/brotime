@@ -1,7 +1,6 @@
 package com.fagerland.brotime.controllers
 
 import com.fagerland.brotime.forms.DiffDTO
-import com.fagerland.brotime.forms.EndTimeForm
 import com.fagerland.brotime.forms.RegisterTimeForm
 import com.fagerland.brotime.forms.TimeForm
 import com.fagerland.brotime.models.TimeEntry
@@ -48,21 +47,6 @@ class TimeController @Autowired constructor(
         return timeService.insertTime(userEntry, registerTimeForm)
     }
 
-    @PutMapping("/api/time/endtime")
-    fun updateEndTime(authentication: Authentication, @RequestBody endTimeForm: EndTimeForm): ResponseEntity<String> {
-        val userEntry: UserEntry? = getUserEntry(authentication)
-        if (userEntry != null) {
-            val timeEntry: TimeEntry? = timeRepository.findFirstByUserEntryIdOrderByStartTimeDesc(userEntry.id)
-            //val timeEntry: TimeEntry? = null
-            if (timeEntry != null) {
-                timeEntry.endTime = endTimeForm.endTime
-                timeRepository.save(timeEntry)
-                return ResponseEntity.status(HttpStatus.OK).build()
-            }
-        }
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).build()
-    }
-
     @PutMapping("/api/time")
     fun editTimeEntry(authentication: Authentication, @RequestBody timeForm: TimeForm): ResponseEntity<String> {
         val userEntry: UserEntry? = getUserEntry(authentication)
@@ -72,14 +56,11 @@ class TimeController @Autowired constructor(
     @DeleteMapping("/api/time/{timeId}")
     fun deleteTimeEntry(authentication: Authentication, @PathVariable timeId: Long): ResponseEntity<String> {
         val userEntry: UserEntry? = getUserEntry(authentication)
-        if (userEntry != null) {
-            val timeEntry: TimeEntry? = timeRepository.findFirstByIdAndUserEntryId(timeId, userEntry.id)
-            if (timeEntry != null) {
-                timeRepository.delete(timeEntry)
-                return ResponseEntity.status(HttpStatus.OK).build()
-            }
+        return if (timeService.deleteTimeEntry(userEntry, timeId)) {
+            ResponseEntity.status(HttpStatus.OK).build()
+        } else {
+            ResponseEntity.status(HttpStatus.BAD_REQUEST).build()
         }
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).build()
     }
 
     @GetMapping("/api/time/diff")

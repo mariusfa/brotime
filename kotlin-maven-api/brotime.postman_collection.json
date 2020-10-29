@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "f77c7b66-2f5e-4475-8c19-1ef49876fc16",
+		"_postman_id": "18068f56-24ea-49c8-8c73-165b130f917d",
 		"name": "brotime",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -11,7 +11,7 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "f2984676-44f4-4b96-beca-a52e8abdd187",
+						"id": "16000394-e1f2-4b2d-9d35-cbdc6fdb989c",
 						"exec": [
 							"pm.test(\"Status test\", function () {",
 							"   pm.response.to.have.status(201); ",
@@ -57,7 +57,7 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "4c5ade1a-dcbe-4181-ab25-e16e96de2308",
+						"id": "59c37757-f2b0-4919-b2d7-07102bb63e9d",
 						"exec": [
 							"pm.test(\"Status test\", function() {",
 							"    pm.response.to.have.status(200);",
@@ -106,7 +106,7 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "aaf4e4fc-b67a-4f06-a028-d86d7a45f268",
+						"id": "c92fc454-042d-4ccb-8120-53e1b50ac104",
 						"exec": [
 							"pm.test(\"Status test\", function() {",
 							"    pm.response.to.have.status(200);    ",
@@ -151,6 +151,41 @@
 			"response": []
 		},
 		{
+			"name": "add time",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authentication",
+						"value": "Bearer {{token}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"timeStamp\": 1604013745578,\n    \"timeZone\": \"Europe\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/time",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"time"
+					]
+				}
+			},
+			"response": []
+		},
+		{
 			"name": "get all times",
 			"request": {
 				"method": "GET",
@@ -176,6 +211,103 @@
 				}
 			},
 			"response": []
+		},
+		{
+			"name": "update time",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Authentication",
+						"value": "Bearer {{token}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"startTime\": 1604013745578,\n    \"endTime\": 1604014041717,\n    \"timeZone\": \"Europe\",\n    \"id\": 2\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/time",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"time"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "diff time",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authentication",
+						"value": "Bearer {{token}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:8080/api/time/diff",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"time",
+						"diff"
+					],
+					"query": [
+						{
+							"key": "Authentication",
+							"value": "Bearer {{token}}",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "delete time",
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Authentication",
+						"value": "Bearer {{token}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:8080/api/time/2",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"time",
+						"2"
+					]
+				}
+			},
+			"response": []
 		}
-	]
+	],
+	"protocolProfileBehavior": {}
 }
