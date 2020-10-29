@@ -1,7 +1,7 @@
 package com.fagerland.brotime.controllers
 
+import com.fagerland.brotime.dto.requests.TokenDTO
 import com.fagerland.brotime.dto.requests.UserDTO
-import com.fagerland.brotime.forms.TokenForm
 import com.fagerland.brotime.services.UserService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
@@ -37,6 +37,6 @@ class UserController @Autowired constructor(
     }
 
     @PostMapping("/api/user/validate")
-    fun validateToken(@RequestBody tokenForm: TokenForm): Boolean =
-        userService.getUsernameFromToken(tokenForm.token) != null
+    fun validateToken(@RequestBody tokenDTO: TokenDTO): Boolean =
+        userService.getUsernameFromToken(tokenDTO.token) != null
 }
