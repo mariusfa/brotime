@@ -9,8 +9,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 class JwtConfig : SecurityConfigurerAdapter<DefaultSecurityFilterChain, HttpSecurity>() {
 
     override fun configure(httpSecurity: HttpSecurity) {
-        val filter: JwtFilter = JwtFilter()
+        val filter = JwtFilter()
         httpSecurity.addFilterBefore(filter, UsernamePasswordAuthenticationFilter::class.java)
     }
-
 }
