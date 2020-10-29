@@ -13,26 +13,25 @@ class SpringSecurityConfig : WebSecurityConfigurerAdapter() {
 
     @Bean
     @Throws(Exception::class)
-    override fun authenticationManagerBean() : AuthenticationManager  {
-       return super.authenticationManagerBean()
+    override fun authenticationManagerBean(): AuthenticationManager {
+        return super.authenticationManagerBean()
     }
 
     @Throws(Exception::class)
-    protected override fun configure(httpSecurity: HttpSecurity) {
-       httpSecurity.cors().and()
-               .httpBasic().disable()
-               .csrf().disable()
-               .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-               .and()
-               .authorizeRequests()
-               .anyRequest().authenticated()
-               .and()
-               .apply(JwtConfig())
+    override fun configure(httpSecurity: HttpSecurity) {
+        httpSecurity.cors().and()
+            .httpBasic().disable()
+            .csrf().disable()
+            .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+            .and()
+            .authorizeRequests()
+            .anyRequest().authenticated()
+            .and()
+            .apply(JwtConfig())
     }
 
     @Throws(Exception::class)
-    public override fun configure(web: WebSecurity) {
+    override fun configure(web: WebSecurity) {
         web.ignoring().antMatchers("/api/user/**")
     }
-
 }
