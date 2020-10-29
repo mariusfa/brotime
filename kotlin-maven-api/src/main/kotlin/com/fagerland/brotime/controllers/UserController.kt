@@ -1,6 +1,6 @@
 package com.fagerland.brotime.controllers
 
-import com.fagerland.brotime.dto.UserDTO
+import com.fagerland.brotime.dto.requests.UserDTO
 import com.fagerland.brotime.forms.TokenForm
 import com.fagerland.brotime.services.UserService
 import org.springframework.beans.factory.annotation.Autowired

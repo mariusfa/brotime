@@ -1,6 +1,6 @@
 package com.fagerland.brotime.services
 
-import com.fagerland.brotime.dto.UserDTO
+import com.fagerland.brotime.dto.requests.UserDTO
 import com.fagerland.brotime.models.UserEntry
 import com.fagerland.brotime.repositories.UserRepository
 import io.jsonwebtoken.Claims

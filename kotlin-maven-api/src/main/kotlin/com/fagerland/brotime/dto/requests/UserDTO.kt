@@ -1,4 +1,4 @@
-package com.fagerland.brotime.dto
+package com.fagerland.brotime.dto.requests
 
 data class UserDTO (
     val username: String,
