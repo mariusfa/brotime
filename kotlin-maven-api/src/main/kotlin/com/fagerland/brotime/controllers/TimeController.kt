@@ -33,7 +33,7 @@ class TimeController @Autowired constructor(
     @GetMapping("/api/time/all")
     fun getTimes(authentication: Authentication): List<TimeEntry> {
         val userEntry: UserEntry? = getUserEntry(authentication)
-        return timeService.getTimes(userEntry);
+        return timeService.getTimes(userEntry)
     }
 
     @GetMapping("/api/time")
@@ -88,7 +88,7 @@ class TimeController @Autowired constructor(
         var timeDiff: Long = 0
         if (userEntry != null) {
             val timeEntries: List<TimeEntry> = timeRepository.findAllByUserEntryIdOrderByStartTimeDesc(userEntry.id)
-            if (timeEntries.size > 0) {
+            if (timeEntries.isNotEmpty()) {
                 for (item in timeEntries) {
                     timeDiff += item.endTime!! - item.startTime!! - 8*3600_000
                 }
@@ -99,7 +99,6 @@ class TimeController @Autowired constructor(
 
     private fun getUserEntry(authentication: Authentication): UserEntry? {
         val name: String = authentication.name
-        val userEntry: UserEntry? = userRepository.findFirstByUsername(name)
-        return userEntry
+        return userRepository.findFirstByUsername(name)
     }
 }

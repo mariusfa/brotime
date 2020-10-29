@@ -22,7 +22,7 @@ class UserController @Autowired constructor(
         return if (userService.registerUser(userDTO)) {
             ResponseEntity.status(HttpStatus.CREATED).build()
         } else {
-            ResponseEntity.status(HttpStatus.CONFLICT).build();
+            ResponseEntity.status(HttpStatus.CONFLICT).build()
         }
     }
 
