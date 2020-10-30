@@ -14,21 +14,12 @@ import org.springframework.stereotype.Service
 class TimeService @Autowired constructor(
         val timeRepository: TimeRepository
 ) {
-    fun getTimes(userEntry: UserEntry?): List<TimeEntry> {
-        if (userEntry != null) {
-            return timeRepository.findAllByUserEntryIdOrderByStartTimeDesc(userEntry.id)
-        }
-        return emptyList()
+    fun getTimes(userEntry: UserEntry): List<TimeEntry> {
+        return timeRepository.findAllByUserEntryIdOrderByStartTimeDesc(userEntry.id)
     }
 
-    fun getLatestTime(userEntry: UserEntry?): ResponseEntity<TimeEntry> {
-        if (userEntry != null) {
-            val timeEntry: TimeEntry? = timeRepository.findFirstByUserEntryIdOrderByStartTimeDesc(userEntry.id)
-            if (timeEntry !=null) {
-                return ResponseEntity.ok(timeEntry)
-            }
-        }
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).build()
+    fun getLatestTime(userEntry: UserEntry): TimeEntry? {
+        return timeRepository.findFirstByUserEntryIdOrderByStartTimeDesc(userEntry.id)
     }
 
     fun insertTime(userEntry: UserEntry?, timeEntryDto: RegisterTimeForm): ResponseEntity<String> {

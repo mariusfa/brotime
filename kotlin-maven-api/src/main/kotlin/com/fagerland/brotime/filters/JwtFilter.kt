@@ -1,5 +1,6 @@
 package com.fagerland.brotime.filters
 
+import com.fagerland.brotime.repositories.UserRepository
 import io.jsonwebtoken.Claims
 import io.jsonwebtoken.Jws
 import io.jsonwebtoken.Jwts
@@ -15,7 +16,9 @@ import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
 
 
-class JwtFilter : GenericFilterBean() {
+class JwtFilter constructor(
+    private val userRepository: UserRepository
+) : GenericFilterBean() {
     override fun doFilter(servletRequest: ServletRequest?, servletResponse: ServletResponse?, filterChain: FilterChain?) {
         val req: HttpServletRequest = servletRequest as HttpServletRequest
         val res: HttpServletResponse = servletResponse as HttpServletResponse
@@ -27,8 +30,13 @@ class JwtFilter : GenericFilterBean() {
                 val claims: Jws<Claims> = Jwts.parser().setSigningKey("secret").parseClaimsJws(token)
                 if (!claims.body.expiration.before(Date())) {
                     val username: String = claims.body.subject
-                    val auth: Authentication = UsernamePasswordAuthenticationToken(username, null, arrayListOf()) as Authentication
-                    SecurityContextHolder.getContext().authentication = auth
+                    if (userRepository.findFirstByUsername(username) != null) {
+                        val auth: Authentication = UsernamePasswordAuthenticationToken(username, null, arrayListOf())
+                        SecurityContextHolder.getContext().authentication = auth
+                    } else {
+                        res.sendError(HttpServletResponse.SC_UNAUTHORIZED)
+                        return
+                    }
                 } else {
                     res.sendError(HttpServletResponse.SC_UNAUTHORIZED)
                     return
@@ -41,8 +49,6 @@ class JwtFilter : GenericFilterBean() {
             res.sendError(HttpServletResponse.SC_UNAUTHORIZED)
             return
         }
-        if (filterChain != null) {
-            filterChain.doFilter(servletRequest, servletResponse)
-        }
+        filterChain?.doFilter(servletRequest, servletResponse)
     }
 }
