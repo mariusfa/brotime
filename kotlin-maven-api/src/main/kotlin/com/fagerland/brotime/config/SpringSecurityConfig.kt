@@ -36,6 +36,8 @@ class SpringSecurityConfig @Autowired constructor(
 
     @Throws(Exception::class)
     override fun configure(web: WebSecurity) {
-        web.ignoring().antMatchers("/api/user/**")
+        web.ignoring()
+            .antMatchers("/api/user/**")
+            .antMatchers("/api/health")
     }
 }

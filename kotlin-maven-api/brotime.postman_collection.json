@@ -6,6 +6,26 @@
 	},
 	"item": [
 		{
+			"name": "get health",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/health",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"health"
+					]
+				}
+			},
+			"response": []
+		},
+		{
 			"name": "create user",
 			"event": [
 				{
@@ -207,6 +227,32 @@
 						"api",
 						"time",
 						"all"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get latest time",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authentication",
+						"value": "Bearer {{token}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:8080/api/time",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"time"
 					]
 				}
 			},

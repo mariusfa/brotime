@@ -16,6 +16,6 @@ WORKDIR /opt/app
 
 COPY --from=builder /opt/app/target/*.jar /opt/app/app.jar
 
-HEALTHCHECK --interval=10s CMD curl --fail http://localhost:8080/healthy || exit 1 
+HEALTHCHECK --interval=10s CMD curl --fail http://localhost:8080/api/health || exit 1
 
 CMD [ "java", "-jar", "app.jar" ]
