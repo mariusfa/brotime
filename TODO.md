@@ -1,8 +1,5 @@
 # TODO
 
-- digitalocean server ubuntu 20.04
-    - install docker + docker-compose
-
 - provision-server (ansible). Eget repo
 
 - github actions:
