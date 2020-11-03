@@ -1,0 +1,59 @@
+# This is a basic workflow to help you get started with Actions
+
+name: CI
+
+# Controls when the action will run. Triggers the workflow on push or pull request
+# events but only for the master branch
+on:
+  push:
+    branches: [ master ]
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "build"
+  build:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v2
+
+      # Runs a single command using the runners shell
+      - name: Run docker build
+        run: docker build -t api -f kotlin-maven-api/Dockerfile kotlin-maven-api/
+      
+      - name: Run docker save
+        run: docker save api > api.tar
+      
+      - name: SCP Upload
+        # You may pin to the exact commit or the version.
+        # uses: betanzos/scp-upload@4afbc824f4b0940d2b1ae862590033424385e3ab
+        uses: betanzos/scp-upload@v1
+        with:
+          # Source local file path
+          source: api.tar
+          # Remote host
+          host: ${{ secrets.HOST }}
+          # Remote host SSH port
+          # Remote host username
+          username: ${{ secrets.USER }}
+          # SSH private key
+          key: ${{ secrets.PRIVATE_KEY }}
+          # Remote directory to copy the file
+          remote_dir: ~/
+      
+      - name: ls -a via ssh
+        uses: garygrossgarten/github-action-ssh@release
+        with:
+          command: |
+            docker rm -f api
+            docker rmi api:prev
+            docker tag api:latest api:prev
+            docker load < api.tar
+            docker run -d --name api -p 8080:8080 api:latest
+            rm -rf api.tar
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USER }}
+          privateKey: ${{ secrets.PRIVATE_KEY}}
