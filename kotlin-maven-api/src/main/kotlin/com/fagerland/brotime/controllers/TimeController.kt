@@ -1,8 +1,8 @@
 package com.fagerland.brotime.controllers
 
-import com.fagerland.brotime.dto.responses.DiffDTO
 import com.fagerland.brotime.dto.requests.RegisterTimeDTO
 import com.fagerland.brotime.dto.requests.TimeDTO
+import com.fagerland.brotime.dto.responses.DiffDTO
 import com.fagerland.brotime.models.TimeEntry
 import com.fagerland.brotime.models.UserEntry
 import com.fagerland.brotime.repositories.TimeRepository
@@ -12,21 +12,14 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.security.core.Authentication
-import org.springframework.web.bind.annotation.CrossOrigin
-import org.springframework.web.bind.annotation.DeleteMapping
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.PathVariable
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.PutMapping
-import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
 
 @CrossOrigin
 @RestController
 class TimeController @Autowired constructor(
-        val userRepository: UserRepository,
-        val timeRepository: TimeRepository,
-        val timeService: TimeService
+    val userRepository: UserRepository,
+    val timeRepository: TimeRepository,
+    val timeService: TimeService
 ) {
 
     @GetMapping("/api/time/all")
@@ -50,7 +43,7 @@ class TimeController @Autowired constructor(
     @PutMapping("/api/time")
     fun editTimeEntry(authentication: Authentication, @RequestBody timeDTO: TimeDTO): ResponseEntity<String> {
         val userEntry: UserEntry = getUserEntry(authentication)
-        return timeService.updateEndTime(userEntry,timeDTO)
+        return timeService.updateEndTime(userEntry, timeDTO)
     }
 
     @DeleteMapping("/api/time/{timeId}")
