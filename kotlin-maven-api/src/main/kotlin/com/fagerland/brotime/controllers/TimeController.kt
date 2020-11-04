@@ -1,8 +1,8 @@
 package com.fagerland.brotime.controllers
 
-import com.fagerland.brotime.forms.DiffDTO
-import com.fagerland.brotime.forms.RegisterTimeForm
-import com.fagerland.brotime.forms.TimeForm
+import com.fagerland.brotime.dto.responses.DiffDTO
+import com.fagerland.brotime.dto.requests.RegisterTimeDTO
+import com.fagerland.brotime.dto.requests.TimeDTO
 import com.fagerland.brotime.models.TimeEntry
 import com.fagerland.brotime.models.UserEntry
 import com.fagerland.brotime.repositories.TimeRepository
@@ -42,15 +42,15 @@ class TimeController @Autowired constructor(
     }
 
     @PostMapping("/api/time")
-    fun postTime(authentication: Authentication, @RequestBody registerTimeForm: RegisterTimeForm): ResponseEntity<String> {
+    fun postTime(authentication: Authentication, @RequestBody registerTimeDTO: RegisterTimeDTO): ResponseEntity<String> {
         val userEntry: UserEntry = getUserEntry(authentication)
-        return timeService.insertTime(userEntry, registerTimeForm)
+        return timeService.insertTime(userEntry, registerTimeDTO)
     }
 
     @PutMapping("/api/time")
-    fun editTimeEntry(authentication: Authentication, @RequestBody timeForm: TimeForm): ResponseEntity<String> {
+    fun editTimeEntry(authentication: Authentication, @RequestBody timeDTO: TimeDTO): ResponseEntity<String> {
         val userEntry: UserEntry = getUserEntry(authentication)
-        return timeService.updateEndTime(userEntry,timeForm)
+        return timeService.updateEndTime(userEntry,timeDTO)
     }
 
     @DeleteMapping("/api/time/{timeId}")

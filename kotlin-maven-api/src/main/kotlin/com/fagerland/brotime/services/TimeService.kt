@@ -1,7 +1,7 @@
 package com.fagerland.brotime.services
 
-import com.fagerland.brotime.forms.RegisterTimeForm
-import com.fagerland.brotime.forms.TimeForm
+import com.fagerland.brotime.dto.requests.RegisterTimeDTO
+import com.fagerland.brotime.dto.requests.TimeDTO
 import com.fagerland.brotime.models.TimeEntry
 import com.fagerland.brotime.models.UserEntry
 import com.fagerland.brotime.repositories.TimeRepository
@@ -22,7 +22,7 @@ class TimeService @Autowired constructor(
         return timeRepository.findFirstByUserEntryIdOrderByStartTimeDesc(userEntry.id)
     }
 
-    fun insertTime(userEntry: UserEntry?, timeEntryDto: RegisterTimeForm): ResponseEntity<String> {
+    fun insertTime(userEntry: UserEntry?, timeEntryDto: RegisterTimeDTO): ResponseEntity<String> {
         if (userEntry != null) {
             val timeEntry = TimeEntry(timeEntryDto.timeStamp, timeEntryDto.timeStamp, timeEntryDto.timeZone, userEntry)
             timeRepository.save(timeEntry)
@@ -31,13 +31,13 @@ class TimeService @Autowired constructor(
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).build()
     }
 
-    fun updateEndTime(userEntry: UserEntry?, timeForm: TimeForm): ResponseEntity<String> {
+    fun updateEndTime(userEntry: UserEntry?, timeDTO: TimeDTO): ResponseEntity<String> {
         if (userEntry != null) {
-            val timeEntry: TimeEntry? = timeRepository.findFirstByIdAndUserEntryId(timeForm.id, userEntry.id)
+            val timeEntry: TimeEntry? = timeRepository.findFirstByIdAndUserEntryId(timeDTO.id, userEntry.id)
             if (timeEntry != null) {
-                timeEntry.startTime = timeForm.startTime
-                timeEntry.endTime = timeForm.endTime
-                timeEntry.timeZone = timeForm.timeZone
+                timeEntry.startTime = timeDTO.startTime
+                timeEntry.endTime = timeDTO.endTime
+                timeEntry.timeZone = timeDTO.timeZone
                 timeRepository.save(timeEntry)
                 return ResponseEntity.status(HttpStatus.OK).build()
             }
