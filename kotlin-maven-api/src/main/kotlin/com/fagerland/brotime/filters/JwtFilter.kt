@@ -23,32 +23,32 @@ class JwtFilter constructor(
         val req: HttpServletRequest = servletRequest as HttpServletRequest
         val res: HttpServletResponse = servletResponse as HttpServletResponse
         val bearerToken = req.getHeader("Authentication")
-        if (bearerToken != null) {
-            val token = bearerToken.substring(7, bearerToken.length)
+        val username = getUsernameFromToken(bearerToken)
+        if (username == null) {
+            res.sendError(HttpServletResponse.SC_UNAUTHORIZED)
+            return
+        } else {
+            val auth: Authentication = UsernamePasswordAuthenticationToken(username, null, arrayListOf())
+            SecurityContextHolder.getContext().authentication = auth
+            filterChain?.doFilter(servletRequest, servletResponse)
+        }
+    }
 
+    private fun getUsernameFromToken(token: String?): String? {
+        if (token != null) {
+            val tokenValue = token.substring(7, token.length)
             try {
-                val claims: Jws<Claims> = Jwts.parser().setSigningKey("secret").parseClaimsJws(token)
+                val claims: Jws<Claims> = Jwts.parser().setSigningKey("secret").parseClaimsJws(tokenValue)
                 if (!claims.body.expiration.before(Date())) {
                     val username: String = claims.body.subject
                     if (userRepository.findFirstByUsername(username) != null) {
-                        val auth: Authentication = UsernamePasswordAuthenticationToken(username, null, arrayListOf())
-                        SecurityContextHolder.getContext().authentication = auth
-                    } else {
-                        res.sendError(HttpServletResponse.SC_UNAUTHORIZED)
-                        return
+                        return username
                     }
-                } else {
-                    res.sendError(HttpServletResponse.SC_UNAUTHORIZED)
-                    return
                 }
             } catch (e: Exception) {
-                res.sendError(HttpServletResponse.SC_UNAUTHORIZED)
-                return
+                return null
             }
-        } else {
-            res.sendError(HttpServletResponse.SC_UNAUTHORIZED)
-            return
         }
-        filterChain?.doFilter(servletRequest, servletResponse)
+        return null
     }
 }

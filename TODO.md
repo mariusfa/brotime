@@ -11,8 +11,6 @@
 - Postgres for prod, H2 i dev:
     - Spring boot profiles
 
-- DTO rydding
-
 - UserService test
 - TimeService test
 - UserController test
