@@ -13,8 +13,6 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.util.Assert
-
 
 @SpringBootTest
 @ExtendWith(MockKExtension::class)
@@ -52,8 +50,7 @@ class UserServiceTests {
         val userDTO = UserDTO("test", "test")
         every { userRepository.findFirstByUsername("test") } returns userEntry
         val token = userService.loginUser(userDTO)
-        
-        Assertions.assertEquals("test", userService.getUsernameFromToken(token))
 
+        Assertions.assertEquals("test", userService.getUsernameFromToken(token))
     }
 }
