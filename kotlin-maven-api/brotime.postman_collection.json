@@ -7,6 +7,20 @@
 	"item": [
 		{
 			"name": "get health",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "3fd33e8d-46bd-48a3-8cbb-2594e2cc1bf1",
+						"exec": [
+							"pm.test(\"Status test\", function() {",
+							"    pm.response.to.have.status(200);    ",
+							"})"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
 			"request": {
 				"method": "GET",
 				"header": [],
@@ -172,6 +186,20 @@
 		},
 		{
 			"name": "add time",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "ff884066-3152-4a00-a461-725c6c1e361c",
+						"exec": [
+							"pm.test(\"Status test\", function() {",
+							"    pm.response.to.have.status(201);    ",
+							"})"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
 			"request": {
 				"method": "POST",
 				"header": [
@@ -207,6 +235,20 @@
 		},
 		{
 			"name": "get all times",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "1502e423-8e39-42ac-ba43-ad30275d234e",
+						"exec": [
+							"pm.test(\"Status test\", function() {",
+							"    pm.response.to.have.status(200);    ",
+							"})"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
 			"request": {
 				"method": "GET",
 				"header": [
@@ -234,6 +276,20 @@
 		},
 		{
 			"name": "get latest time",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "ab9ac788-6bf9-4285-9d2e-91fdb3174514",
+						"exec": [
+							"pm.test(\"Status test\", function() {",
+							"    pm.response.to.have.status(200);    ",
+							"})"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
 			"request": {
 				"method": "GET",
 				"header": [
@@ -260,6 +316,20 @@
 		},
 		{
 			"name": "update time",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "e9891170-4d58-4351-8a1d-cae61d5ec99a",
+						"exec": [
+							"pm.test(\"Status test\", function() {",
+							"    pm.response.to.have.status(200);    ",
+							"})"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
 			"request": {
 				"method": "PUT",
 				"header": [
@@ -295,6 +365,20 @@
 		},
 		{
 			"name": "diff time",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "61512e77-db5c-43b9-992d-dd3c7f744956",
+						"exec": [
+							"pm.test(\"Status test\", function() {",
+							"    pm.response.to.have.status(200);    ",
+							"})"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
 			"request": {
 				"method": "GET",
 				"header": [
@@ -329,6 +413,20 @@
 		},
 		{
 			"name": "delete time",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "7ad328ed-dab0-439c-a6b8-805c448a8b63",
+						"exec": [
+							"pm.test(\"Status test\", function() {",
+							"    pm.response.to.have.status(200);    ",
+							"})"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
 			"request": {
 				"method": "DELETE",
 				"header": [
