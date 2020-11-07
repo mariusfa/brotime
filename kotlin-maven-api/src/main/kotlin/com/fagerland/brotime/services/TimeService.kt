@@ -1,7 +1,7 @@
 package com.fagerland.brotime.services
 
-import com.fagerland.brotime.dto.requests.RegisterTimeDTO
-import com.fagerland.brotime.dto.requests.TimeDTO
+import com.fagerland.brotime.dto.requests.insertTimeDTO
+import com.fagerland.brotime.dto.requests.updateTimeDTO
 import com.fagerland.brotime.models.TimeEntry
 import com.fagerland.brotime.models.UserEntry
 import com.fagerland.brotime.repositories.TimeRepository
@@ -22,22 +22,18 @@ class TimeService @Autowired constructor(
         return timeRepository.findFirstByUserEntryIdOrderByStartTimeDesc(userEntry.id)
     }
 
-    fun insertTime(userEntry: UserEntry?, timeEntryDto: RegisterTimeDTO): ResponseEntity<String> {
-        if (userEntry != null) {
-            val timeEntry = TimeEntry(timeEntryDto.timeStamp, timeEntryDto.timeStamp, timeEntryDto.timeZone, userEntry)
-            timeRepository.save(timeEntry)
-            return ResponseEntity.status(HttpStatus.CREATED).build()
-        }
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).build()
+    fun insertTime(userEntry: UserEntry, insertTimeDto: insertTimeDTO) {
+        val timeEntry = TimeEntry(insertTimeDto.timeStamp, insertTimeDto.timeStamp, insertTimeDto.timeZone, userEntry)
+        timeRepository.save(timeEntry)
     }
 
-    fun updateEndTime(userEntry: UserEntry?, timeDTO: TimeDTO): ResponseEntity<String> {
+    fun updateEndTime(userEntry: UserEntry?, updateTimeDTO: updateTimeDTO): ResponseEntity<String> {
         if (userEntry != null) {
-            val timeEntry: TimeEntry? = timeRepository.findFirstByIdAndUserEntryId(timeDTO.id, userEntry.id)
+            val timeEntry: TimeEntry? = timeRepository.findFirstByIdAndUserEntryId(updateTimeDTO.id, userEntry.id)
             if (timeEntry != null) {
-                timeEntry.startTime = timeDTO.startTime
-                timeEntry.endTime = timeDTO.endTime
-                timeEntry.timeZone = timeDTO.timeZone
+                timeEntry.startTime = updateTimeDTO.startTime
+                timeEntry.endTime = updateTimeDTO.endTime
+                timeEntry.timeZone = updateTimeDTO.timeZone
                 timeRepository.save(timeEntry)
                 return ResponseEntity.status(HttpStatus.OK).build()
             }
