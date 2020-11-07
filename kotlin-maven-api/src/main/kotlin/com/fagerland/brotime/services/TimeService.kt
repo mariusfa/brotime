@@ -1,13 +1,11 @@
 package com.fagerland.brotime.services
 
-import com.fagerland.brotime.dto.requests.RegisterTimeDTO
-import com.fagerland.brotime.dto.requests.TimeDTO
+import com.fagerland.brotime.dto.requests.InsertTimeDTO
+import com.fagerland.brotime.dto.requests.UpdateTimeDTO
 import com.fagerland.brotime.models.TimeEntry
 import com.fagerland.brotime.models.UserEntry
 import com.fagerland.brotime.repositories.TimeRepository
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.http.HttpStatus
-import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Service
 
 @Service
@@ -22,37 +20,42 @@ class TimeService @Autowired constructor(
         return timeRepository.findFirstByUserEntryIdOrderByStartTimeDesc(userEntry.id)
     }
 
-    fun insertTime(userEntry: UserEntry?, timeEntryDto: RegisterTimeDTO): ResponseEntity<String> {
-        if (userEntry != null) {
-            val timeEntry = TimeEntry(timeEntryDto.timeStamp, timeEntryDto.timeStamp, timeEntryDto.timeZone, userEntry)
+    fun insertTime(userEntry: UserEntry, insertTimeDto: InsertTimeDTO) {
+        val timeEntry = TimeEntry(insertTimeDto.timeStamp, insertTimeDto.timeStamp, insertTimeDto.timeZone, userEntry)
+        timeRepository.save(timeEntry)
+    }
+
+    fun updateTime(userEntry: UserEntry, updateTimeDTO: UpdateTimeDTO): Boolean {
+        val timeEntry: TimeEntry? = timeRepository.findFirstByIdAndUserEntryId(updateTimeDTO.id, userEntry.id)
+        return if (timeEntry != null) {
+            timeEntry.startTime = updateTimeDTO.startTime
+            timeEntry.endTime = updateTimeDTO.endTime
+            timeEntry.timeZone = updateTimeDTO.timeZone
             timeRepository.save(timeEntry)
-            return ResponseEntity.status(HttpStatus.CREATED).build()
+            true
+        } else {
+            false
         }
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).build()
     }
 
-    fun updateEndTime(userEntry: UserEntry?, timeDTO: TimeDTO): ResponseEntity<String> {
-        if (userEntry != null) {
-            val timeEntry: TimeEntry? = timeRepository.findFirstByIdAndUserEntryId(timeDTO.id, userEntry.id)
-            if (timeEntry != null) {
-                timeEntry.startTime = timeDTO.startTime
-                timeEntry.endTime = timeDTO.endTime
-                timeEntry.timeZone = timeDTO.timeZone
-                timeRepository.save(timeEntry)
-                return ResponseEntity.status(HttpStatus.OK).build()
-            }
+    fun deleteTime(userEntry: UserEntry, timeEntryId: Long): Boolean {
+        val timeEntry: TimeEntry? = timeRepository.findFirstByIdAndUserEntryId(timeEntryId, userEntry.id)
+        return if (timeEntry != null) {
+            timeRepository.delete(timeEntry)
+            true
+        } else {
+            false
         }
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).build()
     }
 
-    fun deleteTimeEntry(userEntry: UserEntry?, timeEntryId: Long): Boolean {
-        if (userEntry != null) {
-            val timeEntry: TimeEntry? = timeRepository.findFirstByIdAndUserEntryId(timeEntryId, userEntry.id)
-            if (timeEntry != null) {
-                timeRepository.delete(timeEntry)
-                return true
+    fun getTimeDiff(userEntryId: Long): Long {
+        var timeDiff: Long = 0
+        val timeEntries: List<TimeEntry> = timeRepository.findAllByUserEntryIdOrderByStartTimeDesc(userEntryId)
+        if (timeEntries.isNotEmpty()) {
+            for (item in timeEntries) {
+                timeDiff += item.endTime!! - item.startTime!! - 8 * 3600_000
             }
         }
-        return false
+        return timeDiff
     }
 }

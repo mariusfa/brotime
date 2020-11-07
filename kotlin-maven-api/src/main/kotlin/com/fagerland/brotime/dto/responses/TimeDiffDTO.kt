@@ -1,5 +1,5 @@
 package com.fagerland.brotime.dto.responses
 
-data class DiffDTO(
+data class TimeDiffDTO(
     val timeDiff: Long
 )
