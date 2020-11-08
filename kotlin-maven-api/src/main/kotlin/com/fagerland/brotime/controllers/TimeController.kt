@@ -1,7 +1,7 @@
 package com.fagerland.brotime.controllers
 
-import com.fagerland.brotime.dto.requests.insertTimeDTO
-import com.fagerland.brotime.dto.requests.updateTimeDTO
+import com.fagerland.brotime.dto.requests.InsertTimeDTO
+import com.fagerland.brotime.dto.requests.UpdateTimeDTO
 import com.fagerland.brotime.dto.responses.DiffDTO
 import com.fagerland.brotime.models.TimeEntry
 import com.fagerland.brotime.models.UserEntry
@@ -35,7 +35,7 @@ class TimeController @Autowired constructor(
     }
 
     @PostMapping("/api/time")
-    fun postTime(authentication: Authentication, @RequestBody insertTimeDTO: insertTimeDTO): ResponseEntity<String> {
+    fun postTime(authentication: Authentication, @RequestBody insertTimeDTO: InsertTimeDTO): ResponseEntity<String> {
         val userEntry: UserEntry = getUserEntry(authentication)
         timeService.insertTime(userEntry, insertTimeDTO)
         return ResponseEntity.status(HttpStatus.CREATED).build()
@@ -43,9 +43,13 @@ class TimeController @Autowired constructor(
     }
 
     @PutMapping("/api/time")
-    fun editTimeEntry(authentication: Authentication, @RequestBody updateTimeDTO: updateTimeDTO): ResponseEntity<String> {
+    fun updateTime(authentication: Authentication, @RequestBody updateTimeDTO: UpdateTimeDTO): ResponseEntity<String> {
         val userEntry: UserEntry = getUserEntry(authentication)
-        return timeService.updateEndTime(userEntry, updateTimeDTO)
+        return if (timeService.updateTime(userEntry, updateTimeDTO)) {
+            ResponseEntity.status(HttpStatus.OK).build()
+        } else {
+            ResponseEntity.status(HttpStatus.NOT_FOUND).build()
+        }
     }
 
     @DeleteMapping("/api/time/{timeId}")
@@ -54,7 +58,7 @@ class TimeController @Autowired constructor(
         return if (timeService.deleteTimeEntry(userEntry, timeId)) {
             ResponseEntity.status(HttpStatus.OK).build()
         } else {
-            ResponseEntity.status(HttpStatus.BAD_REQUEST).build()
+            ResponseEntity.status(HttpStatus.NOT_FOUND).build()
         }
     }
 

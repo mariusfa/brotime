@@ -1,6 +1,7 @@
 package com.fagerland.brotime.services
 
-import com.fagerland.brotime.dto.requests.insertTimeDTO
+import com.fagerland.brotime.dto.requests.InsertTimeDTO
+import com.fagerland.brotime.dto.requests.UpdateTimeDTO
 import com.fagerland.brotime.models.TimeEntry
 import com.fagerland.brotime.models.UserEntry
 import com.fagerland.brotime.repositories.TimeRepository
@@ -51,7 +52,7 @@ class TimeServiceTests {
         val timeEntry = TimeEntry(1,1,"Europe", user, 1)
         every { timeRepository.findFirstByUserEntryIdOrderByStartTimeDesc(any()) } returns timeEntry
 
-        val result = timeService.getLatestTime(user);
+        val result = timeService.getLatestTime(user)
 
         Assertions.assertNotNull(result)
         Assertions.assertEquals(timeEntry.id, result!!.id)
@@ -61,17 +62,36 @@ class TimeServiceTests {
     fun `should test insertTime`() {
         val user = UserEntry("test", "hash", 1)
         val timeEntry = TimeEntry(1,1,"Europe", user, 1)
-        val registerTimeDTO = insertTimeDTO(1, "Europe")
+        val insertTimeDTO = InsertTimeDTO(1, "Europe")
 
         val slot = slot<TimeEntry>()
 
         every { timeRepository.save(capture(slot)) } returns timeEntry
 
-        timeService.insertTime(user, registerTimeDTO)
+        timeService.insertTime(user, insertTimeDTO)
 
-        Assertions.assertEquals(registerTimeDTO.timeStamp, slot.captured.startTime)
-        Assertions.assertEquals(registerTimeDTO.timeStamp, slot.captured.endTime)
-        Assertions.assertEquals(registerTimeDTO.timeZone, slot.captured.timeZone)
+        Assertions.assertEquals(insertTimeDTO.timeStamp, slot.captured.startTime)
+        Assertions.assertEquals(insertTimeDTO.timeStamp, slot.captured.endTime)
+        Assertions.assertEquals(insertTimeDTO.timeZone, slot.captured.timeZone)
         Assertions.assertEquals(user.id, slot.captured.userEntry.id)
+    }
+
+    @Test
+    fun `should test updateTime`() {
+        val user = UserEntry("test", "hash", 1)
+        val timeEntry = TimeEntry(1,1,"Europe", user, 1)
+        val updateTimeDTO = UpdateTimeDTO(2,2, "Europe", 1)
+
+        val slot = slot<TimeEntry>()
+
+        every { timeRepository.findFirstByIdAndUserEntryId(any(), any()) } returns timeEntry
+        every { timeRepository.save(capture(slot)) } returns timeEntry
+
+        timeService.updateTime(user, updateTimeDTO)
+
+        Assertions.assertEquals(updateTimeDTO.startTime, slot.captured.startTime)
+        Assertions.assertEquals(updateTimeDTO.endTime, slot.captured.endTime)
+        Assertions.assertEquals(updateTimeDTO.timeZone, slot.captured.timeZone)
+        Assertions.assertEquals(updateTimeDTO.id, slot.captured.id)
     }
 }
