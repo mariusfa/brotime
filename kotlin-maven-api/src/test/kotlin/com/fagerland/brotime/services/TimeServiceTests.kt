@@ -87,7 +87,7 @@ class TimeServiceTests {
         every { timeRepository.findFirstByIdAndUserEntryId(any(), any()) } returns timeEntry
         every { timeRepository.save(capture(slot)) } returns timeEntry
 
-        timeService.updateTime(user, updateTimeDTO)
+        timeService.updateTime(user, updateTimeDTO);
 
         Assertions.assertEquals(updateTimeDTO.startTime, slot.captured.startTime)
         Assertions.assertEquals(updateTimeDTO.endTime, slot.captured.endTime)
