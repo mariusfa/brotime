@@ -3,8 +3,8 @@ package com.fagerland.brotime.controllers
 import com.fagerland.brotime.dto.requests.insertTimeDTO
 import com.fagerland.brotime.dto.requests.updateTimeDTO
 import com.fagerland.brotime.dto.responses.DiffDTO
-import com.fagerland.brotime.models.TimeEntity
-import com.fagerland.brotime.models.UserEntity
+import com.fagerland.brotime.entities.TimeEntity
+import com.fagerland.brotime.entities.UserEntity
 import com.fagerland.brotime.repositories.TimeRepository
 import com.fagerland.brotime.repositories.UserRepository
 import com.fagerland.brotime.services.TimeService

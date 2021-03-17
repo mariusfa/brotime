@@ -2,8 +2,8 @@ package com.fagerland.brotime.services
 
 import com.fagerland.brotime.dto.requests.insertTimeDTO
 import com.fagerland.brotime.dto.requests.updateTimeDTO
-import com.fagerland.brotime.models.TimeEntity
-import com.fagerland.brotime.models.UserEntity
+import com.fagerland.brotime.entities.TimeEntity
+import com.fagerland.brotime.entities.UserEntity
 import com.fagerland.brotime.repositories.TimeRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus

@@ -1,7 +1,7 @@
 package com.fagerland.brotime.services
 
 import com.fagerland.brotime.dto.requests.UserDTO
-import com.fagerland.brotime.models.UserEntity
+import com.fagerland.brotime.entities.UserEntity
 import com.fagerland.brotime.repositories.UserRepository
 import io.mockk.MockKAnnotations
 import io.mockk.every

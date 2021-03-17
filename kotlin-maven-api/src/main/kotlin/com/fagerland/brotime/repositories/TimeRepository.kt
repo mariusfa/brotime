@@ -1,6 +1,6 @@
 package com.fagerland.brotime.repositories
 
-import com.fagerland.brotime.models.TimeEntity
+import com.fagerland.brotime.entities.TimeEntity
 import org.springframework.data.repository.CrudRepository
 
 interface TimeRepository : CrudRepository<TimeEntity, Long> {
