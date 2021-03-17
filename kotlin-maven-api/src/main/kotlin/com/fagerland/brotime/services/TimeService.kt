@@ -15,11 +15,11 @@ class TimeService @Autowired constructor(
         val timeRepository: TimeRepository
 ) {
     fun getTimes(userEntity: UserEntity): List<TimeEntity> {
-        return timeRepository.findAllByUserEntryIdOrderByStartTimeDesc(userEntity.id)
+        return timeRepository.findAllByUserEntityIdOrderByStartTimeDesc(userEntity.id)
     }
 
     fun getLatestTime(userEntity: UserEntity): TimeEntity? {
-        return timeRepository.findFirstByUserEntryIdOrderByStartTimeDesc(userEntity.id)
+        return timeRepository.findFirstByUserEntityIdOrderByStartTimeDesc(userEntity.id)
     }
 
     fun insertTime(userEntity: UserEntity, insertTimeDto: insertTimeDTO) {
@@ -29,7 +29,7 @@ class TimeService @Autowired constructor(
 
     fun updateEndTime(userEntity: UserEntity?, updateTimeDTO: updateTimeDTO): ResponseEntity<String> {
         if (userEntity != null) {
-            val timeEntity: TimeEntity? = timeRepository.findFirstByIdAndUserEntryId(updateTimeDTO.id, userEntity.id)
+            val timeEntity: TimeEntity? = timeRepository.findFirstByIdAndUserEntityId(updateTimeDTO.id, userEntity.id)
             if (timeEntity != null) {
                 timeEntity.startTime = updateTimeDTO.startTime
                 timeEntity.endTime = updateTimeDTO.endTime
@@ -43,7 +43,7 @@ class TimeService @Autowired constructor(
 
     fun deleteTimeEntry(userEntity: UserEntity?, timeEntryId: Long): Boolean {
         if (userEntity != null) {
-            val timeEntity: TimeEntity? = timeRepository.findFirstByIdAndUserEntryId(timeEntryId, userEntity.id)
+            val timeEntity: TimeEntity? = timeRepository.findFirstByIdAndUserEntityId(timeEntryId, userEntity.id)
             if (timeEntity != null) {
                 timeRepository.delete(timeEntity)
                 return true

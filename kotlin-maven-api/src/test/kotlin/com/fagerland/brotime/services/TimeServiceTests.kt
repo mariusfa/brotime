@@ -36,7 +36,7 @@ class TimeServiceTests {
             TimeEntity(2,3,"Europe", user, 2),
             TimeEntity(1,1,"Europe", user, 1)
         )
-        every { timeRepository.findAllByUserEntryIdOrderByStartTimeDesc(any()) } returns allTimes
+        every { timeRepository.findAllByUserEntityIdOrderByStartTimeDesc(any()) } returns allTimes
 
         val timesResult = timeService.getTimes(user)
 
@@ -49,7 +49,7 @@ class TimeServiceTests {
     fun `should test getLatestTime`() {
         val user = UserEntity("test", "hash", 1)
         val timeEntry = TimeEntity(1,1,"Europe", user, 1)
-        every { timeRepository.findFirstByUserEntryIdOrderByStartTimeDesc(any()) } returns timeEntry
+        every { timeRepository.findFirstByUserEntityIdOrderByStartTimeDesc(any()) } returns timeEntry
 
         val result = timeService.getLatestTime(user);
 

@@ -62,7 +62,7 @@ class TimeController @Autowired constructor(
     fun getDiff(authentication: Authentication): DiffDTO {
         val userEntity: UserEntity = getUserEntry(authentication)
         var timeDiff: Long = 0
-        val timeEntities: List<TimeEntity> = timeRepository.findAllByUserEntryIdOrderByStartTimeDesc(userEntity.id)
+        val timeEntities: List<TimeEntity> = timeRepository.findAllByUserEntityIdOrderByStartTimeDesc(userEntity.id)
         if (timeEntities.isNotEmpty()) {
             for (item in timeEntities) {
                 timeDiff += item.endTime!! - item.startTime!! - 8 * 3600_000
