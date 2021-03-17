@@ -3,8 +3,9 @@ package com.fagerland.brotime.controllers
 import com.fagerland.brotime.dto.requests.InsertTimeDTO
 import com.fagerland.brotime.dto.requests.UpdateTimeDTO
 import com.fagerland.brotime.dto.responses.TimeDiffDTO
-import com.fagerland.brotime.models.TimeEntry
-import com.fagerland.brotime.models.UserEntry
+import com.fagerland.brotime.entities.TimeEntity
+import com.fagerland.brotime.entities.UserEntity
+import com.fagerland.brotime.repositories.TimeRepository
 import com.fagerland.brotime.repositories.UserRepository
 import com.fagerland.brotime.services.TimeService
 import org.springframework.beans.factory.annotation.Autowired
@@ -24,33 +25,33 @@ import org.springframework.web.bind.annotation.RestController
 @RestController
 class TimeController @Autowired constructor(
     val userRepository: UserRepository,
+    val timeRepository: TimeRepository,
     val timeService: TimeService
 ) {
 
     @GetMapping("/api/time/all")
-    fun getTimes(authentication: Authentication): List<TimeEntry> {
-        val userEntry: UserEntry = getUserEntry(authentication)
-        return timeService.getTimes(userEntry)
+    fun getTimes(authentication: Authentication): List<TimeEntity> {
+        val userEntity: UserEntity = getUserEntity(authentication)
+        return timeService.getTimes(userEntity)
     }
 
     @GetMapping("/api/time")
-    fun getLatestTime(authentication: Authentication): TimeEntry? {
-        val userEntry: UserEntry = getUserEntry(authentication)
-        return timeService.getLatestTime(userEntry)
+    fun getLatestTime(authentication: Authentication): TimeEntity? {
+        val userEntity: UserEntity = getUserEntity(authentication)
+        return timeService.getLatestTime(userEntity)
     }
 
     @PostMapping("/api/time")
     fun postTime(authentication: Authentication, @RequestBody insertTimeDTO: InsertTimeDTO): ResponseEntity<String> {
-        val userEntry: UserEntry = getUserEntry(authentication)
-        timeService.insertTime(userEntry, insertTimeDTO)
+        val userEntity: UserEntity = getUserEntity(authentication)
+        timeService.insertTime(userEntity, insertTimeDTO)
         return ResponseEntity.status(HttpStatus.CREATED).build()
-
     }
 
     @PutMapping("/api/time")
     fun updateTime(authentication: Authentication, @RequestBody updateTimeDTO: UpdateTimeDTO): ResponseEntity<String> {
-        val userEntry: UserEntry = getUserEntry(authentication)
-        return if (timeService.updateTime(userEntry, updateTimeDTO)) {
+        val userEntity: UserEntity = getUserEntity(authentication)
+        return if (timeService.updateTime(userEntity, updateTimeDTO)) {
             ResponseEntity.status(HttpStatus.OK).build()
         } else {
             ResponseEntity.status(HttpStatus.NOT_FOUND).build()
@@ -59,8 +60,8 @@ class TimeController @Autowired constructor(
 
     @DeleteMapping("/api/time/{timeId}")
     fun deleteTimeEntry(authentication: Authentication, @PathVariable timeId: Long): ResponseEntity<String> {
-        val userEntry: UserEntry = getUserEntry(authentication)
-        return if (timeService.deleteTime(userEntry, timeId)) {
+        val userEntity: UserEntity = getUserEntity(authentication)
+        return if (timeService.deleteTimeEntity(userEntity, timeId)) {
             ResponseEntity.status(HttpStatus.OK).build()
         } else {
             ResponseEntity.status(HttpStatus.NOT_FOUND).build()
@@ -69,11 +70,11 @@ class TimeController @Autowired constructor(
 
     @GetMapping("/api/time/diff")
     fun getTimeDiff(authentication: Authentication):TimeDiffDTO {
-        val userEntry: UserEntry = getUserEntry(authentication)
+        val userEntry: UserEntity = getUserEntity(authentication)
         return TimeDiffDTO(timeService.getTimeDiff(userEntry.id!!))
     }
 
-    private fun getUserEntry(authentication: Authentication): UserEntry {
+    private fun getUserEntity(authentication: Authentication): UserEntity {
         val name: String = authentication.name
         return userRepository.findFirstByUsername(name)!!
     }
