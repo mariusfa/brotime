@@ -1,7 +1,7 @@
 package com.fagerland.brotime.services
 
 import com.fagerland.brotime.dto.requests.UserDTO
-import com.fagerland.brotime.models.UserEntry
+import com.fagerland.brotime.models.UserEntity
 import com.fagerland.brotime.repositories.UserRepository
 import io.jsonwebtoken.Claims
 import io.jsonwebtoken.Jws
@@ -23,7 +23,7 @@ class UserService @Autowired constructor(
             return false
         }
         val hashedPassword: String = passwordEncoder.encode(userDTO.password)
-        val newUserEntry = UserEntry(userDTO.username, hashedPassword)
+        val newUserEntry = UserEntity(userDTO.username, hashedPassword)
         userRepository.save(newUserEntry)
         return true
     }
@@ -36,7 +36,7 @@ class UserService @Autowired constructor(
         return null
     }
 
-    private fun isCredentialsValid(userDTO: UserDTO, existingUser: UserEntry) =
+    private fun isCredentialsValid(userDTO: UserDTO, existingUser: UserEntity) =
         passwordEncoder.matches(userDTO.password, existingUser.hashedPassword) && existingUser.username.equals(userDTO.username)
 
     fun getUsernameFromToken(token: String?): String? {
@@ -52,13 +52,13 @@ class UserService @Autowired constructor(
         }
     }
 
-    private fun getJwtToken(userEntry: UserEntry): String {
+    private fun getJwtToken(userEntity: UserEntity): String {
         val now = Date()
         val validMillisSeconds: Long = 3600_000
         val expirationDate = Date(now.time + validMillisSeconds)
 
         return Jwts.builder()
-            .setClaims(Jwts.claims().setSubject(userEntry.username))
+            .setClaims(Jwts.claims().setSubject(userEntity.username))
             .setIssuedAt(now)
             .setExpiration(expirationDate)
             .signWith(SignatureAlgorithm.HS256, "secret")
