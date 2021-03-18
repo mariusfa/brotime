@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service
 import java.util.*
 
 @Service
-class UserService @Autowired constructor(
+class UserService(
     val userRepository: UserRepository
 ) {
     val passwordEncoder = BCryptPasswordEncoder()

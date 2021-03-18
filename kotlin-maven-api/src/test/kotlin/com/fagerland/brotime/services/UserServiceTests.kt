@@ -3,36 +3,23 @@ package com.fagerland.brotime.services
 import com.fagerland.brotime.dto.requests.UserDTO
 import com.fagerland.brotime.entities.UserEntity
 import com.fagerland.brotime.repositories.UserRepository
-import io.mockk.MockKAnnotations
 import io.mockk.every
-import io.mockk.impl.annotations.InjectMockKs
-import io.mockk.impl.annotations.MockK
-import io.mockk.junit5.MockKExtension
-import org.junit.jupiter.api.Assertions
-import org.junit.jupiter.api.BeforeEach
+import io.mockk.mockk
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.extension.ExtendWith
-import org.springframework.boot.test.context.SpringBootTest
 
-@SpringBootTest
-@ExtendWith(MockKExtension::class)
 class UserServiceTests {
 
-    @InjectMockKs
-    lateinit var userService: UserService
-
-    @MockK
-    lateinit var userRepository: UserRepository
-
-    @BeforeEach
-    fun setUp() = MockKAnnotations.init(this)
+    private val userRepository = mockk<UserRepository>()
+    private val userService = UserService(userRepository)
 
     @Test
     fun `should test registerUser`() {
         every { userRepository.findFirstByUsername("test") } returns null
         every { userRepository.save(ofType(UserEntity::class)) } returns UserEntity("test", "test")
 
-        Assertions.assertTrue(userService.registerUser(UserDTO("test", "test")))
+        val result = userService.registerUser(UserDTO("test", "test"))
+        assertThat(result).isTrue
     }
 
     @Test
@@ -41,7 +28,8 @@ class UserServiceTests {
         val userDTO = UserDTO("test", "test")
         every { userRepository.findFirstByUsername("test") } returns userEntry
 
-        Assertions.assertNotNull(userService.loginUser(userDTO))
+        val result = userService.loginUser(userDTO)
+        assertThat(result).isNotNull
     }
 
     @Test
@@ -51,6 +39,7 @@ class UserServiceTests {
         every { userRepository.findFirstByUsername("test") } returns userEntry
         val token = userService.loginUser(userDTO)
 
-        Assertions.assertEquals("test", userService.getUsernameFromToken(token))
+        val result = userService.getUsernameFromToken(token)
+        assertThat(result).isEqualTo("test")
     }
 }
