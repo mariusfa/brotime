@@ -10,7 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 
 @Service
-class TimeService @Autowired constructor(
+class TimeService(
         val timeRepository: TimeRepository
 ) {
     fun getTimes(userEntity: UserEntity): List<TimeEntity> {
