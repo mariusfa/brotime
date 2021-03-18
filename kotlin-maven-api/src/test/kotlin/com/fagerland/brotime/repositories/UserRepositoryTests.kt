@@ -24,4 +24,10 @@ class UserRepositoryTests @Autowired constructor(
         assertThat(foundUser).isEqualTo(fakeUser)
         assertThat(notFound).isNull()
     }
+
+    @Test
+    fun `When not user then return null`() {
+        val notFound = userRepository.findFirstByUsername("FakeUser")
+        assertThat(notFound).isNull()
+    }
 }
