@@ -8,11 +8,15 @@ import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.SignatureAlgorithm
 import org.springframework.stereotype.Service
 import java.util.Date
+import javax.servlet.http.HttpServletRequest
+
+private const val HEADER_TOKEN_INDEX = 7
 
 @Service
 class JwtService(
     val userRepository: UserRepository
 ) {
+
     fun createJwt(userEntity: UserEntity): String {
         val now = Date()
         val validMillisSeconds: Long = 3600_000
@@ -24,6 +28,16 @@ class JwtService(
                 .setExpiration(expirationDate)
                 .signWith(SignatureAlgorithm.HS256, "secret")
                 .compact()
+    }
+
+    fun getUsernameFromRequest(request: HttpServletRequest): String? {
+        val token = request.getHeader("Authentication").substring(HEADER_TOKEN_INDEX)
+        val username = getUsernameFromToken(token) ?: return null
+        val userEntity = userRepository.findFirstByUsername(username)
+        if (userEntity != null) {
+            return username
+        }
+        return null
     }
 
     fun getUsernameFromToken(token: String?): String? {
