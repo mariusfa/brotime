@@ -57,4 +57,14 @@ class JwtServiceTests {
         val nullUser = jwtService.getUsernameFromRequest(request)
         assertThat(nullUser).isNull()
     }
+
+    @Test
+    fun `When invalid auth header too small return null`() {
+        val request = mockk<HttpServletRequest>()
+        val garbageHeader = "..."
+        every { request.getHeader("Authentication") } returns garbageHeader
+
+        val nullUser = jwtService.getUsernameFromRequest(request)
+        assertThat(nullUser).isNull()
+    }
 }

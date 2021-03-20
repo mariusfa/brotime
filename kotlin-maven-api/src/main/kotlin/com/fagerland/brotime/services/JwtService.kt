@@ -32,7 +32,7 @@ class JwtService(
 
     fun getUsernameFromRequest(request: HttpServletRequest): String? {
         val authHeader = request.getHeader("Authentication")
-        if (authHeader.isEmpty()) {
+        if (authHeader.length < HEADER_TOKEN_INDEX) {
             return null
         }
         val token = authHeader.substring(HEADER_TOKEN_INDEX)
