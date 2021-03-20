@@ -35,4 +35,17 @@ class JwtServiceTests {
         val validUsername = jwtService.getUsernameFromRequest(request)
         assertThat(validUsername).isEqualTo(validUser.username)
     }
+
+    @Test
+    fun `When invalid user with token return null`() {
+        val invalidUser = UserEntity("fakeUser", "fakeHash")
+        val token = jwtService.createJwt(invalidUser)
+        val bearerToken = "Bearer $token"
+        val request = mockk<HttpServletRequest>()
+        every { request.getHeader("Authentication") } returns bearerToken
+        every { userRepository.findFirstByUsername(invalidUser.username) } returns null
+
+        val nullUser = jwtService.getUsernameFromRequest(request)
+        assertThat(nullUser).isNull()
+    }
 }
