@@ -48,4 +48,13 @@ class JwtServiceTests {
         val nullUser = jwtService.getUsernameFromRequest(request)
         assertThat(nullUser).isNull()
     }
+
+    @Test
+    fun `When empty header return null`() {
+        val request = mockk<HttpServletRequest>()
+        every { request.getHeader("Authentication") } returns ""
+
+        val nullUser = jwtService.getUsernameFromRequest(request)
+        assertThat(nullUser).isNull()
+    }
 }

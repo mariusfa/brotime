@@ -31,7 +31,11 @@ class JwtService(
     }
 
     fun getUsernameFromRequest(request: HttpServletRequest): String? {
-        val token = request.getHeader("Authentication").substring(HEADER_TOKEN_INDEX)
+        val authHeader = request.getHeader("Authentication")
+        if (authHeader.isEmpty()) {
+            return null
+        }
+        val token = authHeader.substring(HEADER_TOKEN_INDEX)
         val username = getUsernameFromToken(token) ?: return null
         val userEntity = userRepository.findFirstByUsername(username)
         if (userEntity != null) {
