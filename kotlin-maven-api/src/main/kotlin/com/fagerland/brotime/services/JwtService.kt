@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service
 import java.util.Date
 
 @Service
-class ABCService(
+class JwtService(
     val userRepository: UserRepository
 ) {
     fun createJwt(userEntity: UserEntity): String {

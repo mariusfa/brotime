@@ -6,10 +6,10 @@ import io.mockk.mockk
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
-class ABCServiceTests {
+class JwtServiceTests {
 
     private val userRepository = mockk<UserRepository>()
-    private val jwtService = ABCService(userRepository)
+    private val jwtService = JwtService(userRepository)
 
     @Test
     fun `When create jwt and validating token return username`() {
@@ -20,7 +20,5 @@ class ABCServiceTests {
         assertThat(resultToken).hasSizeGreaterThan(0)
         assertThat(resultUsername).isEqualTo(fakeUser.username)
     }
-
-
 
 }

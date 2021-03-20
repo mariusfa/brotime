@@ -15,6 +15,8 @@ class TimeServiceTests {
     private val timeRepository = mockk<TimeRepository>()
     private val timeService = TimeService(timeRepository)
 
+
+
     @Test
     fun `should test getTimes`() {
         val user = UserEntity("test", "hash", 1)

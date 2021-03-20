@@ -5,8 +5,6 @@ import com.fagerland.brotime.dto.requests.UpdateTimeDTO
 import com.fagerland.brotime.entities.TimeEntity
 import com.fagerland.brotime.entities.UserEntity
 import com.fagerland.brotime.repositories.TimeRepository
-import org.springframework.beans.factory.annotation.Autowired
-
 import org.springframework.stereotype.Service
 
 @Service
