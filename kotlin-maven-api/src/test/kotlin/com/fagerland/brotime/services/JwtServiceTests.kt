@@ -11,38 +11,27 @@ import javax.servlet.http.HttpServletRequest
 class JwtServiceTests {
 
     private val userRepository = mockk<UserRepository>()
+    private val request = mockk<HttpServletRequest>()
     private val jwtService = JwtService(userRepository)
+    private val fakeUser = UserEntity("fakeUser", "fakeHash")
 
     @Test
     fun `When valid request return username`() {
-        val validUser = UserEntity("fakeUser", "fakeHash")
-        val token = jwtService.createJwt(validUser)
+        val token = jwtService.createJwt(fakeUser)
         val bearerToken = "Bearer $token"
-        val request = mockk<HttpServletRequest>()
         every { request.getHeader("Authentication") } returns bearerToken
-        every { userRepository.findFirstByUsername(validUser.username) } returns validUser
+        every { userRepository.findFirstByUsername(fakeUser.username) } returns fakeUser
 
         val validUsername = jwtService.getUsernameFromRequest(request)
-        assertThat(validUsername).isEqualTo(validUser.username)
+        assertThat(validUsername).isEqualTo(fakeUser.username)
     }
 
     @Test
     fun `When invalid user with token return null`() {
-        val invalidUser = UserEntity("fakeUser", "fakeHash")
-        val token = jwtService.createJwt(invalidUser)
+        val token = jwtService.createJwt(fakeUser)
         val bearerToken = "Bearer $token"
-        val request = mockk<HttpServletRequest>()
         every { request.getHeader("Authentication") } returns bearerToken
-        every { userRepository.findFirstByUsername(invalidUser.username) } returns null
-
-        val nullUser = jwtService.getUsernameFromRequest(request)
-        assertThat(nullUser).isNull()
-    }
-
-    @Test
-    fun `When empty header return null`() {
-        val request = mockk<HttpServletRequest>()
-        every { request.getHeader("Authentication") } returns ""
+        every { userRepository.findFirstByUsername(fakeUser.username) } returns null
 
         val nullUser = jwtService.getUsernameFromRequest(request)
         assertThat(nullUser).isNull()
@@ -50,7 +39,6 @@ class JwtServiceTests {
 
     @Test
     fun `When invalid auth header too small return null`() {
-        val request = mockk<HttpServletRequest>()
         val garbageHeader = "..."
         every { request.getHeader("Authentication") } returns garbageHeader
 
@@ -60,7 +48,6 @@ class JwtServiceTests {
 
     @Test
     fun `When invalid auth header return null`() {
-        val request = mockk<HttpServletRequest>()
         val fakeToken = "Bearer fake"
         every { request.getHeader("Authentication") } returns fakeToken
 
