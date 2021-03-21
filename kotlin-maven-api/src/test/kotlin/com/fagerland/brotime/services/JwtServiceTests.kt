@@ -14,16 +14,6 @@ class JwtServiceTests {
     private val jwtService = JwtService(userRepository)
 
     @Test
-    fun `When create jwt and validating token return username`() {
-        val fakeUser = UserEntity("fakeUser", "fakeHash")
-        val resultToken = jwtService.createJwt(fakeUser)
-        val resultUsername = jwtService.getUsernameFromToken(resultToken)
-
-        assertThat(resultToken).hasSizeGreaterThan(0)
-        assertThat(resultUsername).isEqualTo(fakeUser.username)
-    }
-
-    @Test
     fun `When valid request return username`() {
         val validUser = UserEntity("fakeUser", "fakeHash")
         val token = jwtService.createJwt(validUser)

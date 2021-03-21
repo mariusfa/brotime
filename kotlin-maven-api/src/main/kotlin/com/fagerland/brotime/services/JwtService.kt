@@ -38,7 +38,7 @@ class JwtService(
         return userRepository.findFirstByUsername(username)?.username
     }
 
-    fun getUsernameFromToken(token: String?): String? {
+    private fun getUsernameFromToken(token: String?): String? {
         return try {
             val claims: Jws<Claims> = Jwts.parser().setSigningKey("secret").parseClaimsJws(token)
             if (claims.body.expiration.after(Date())) {
