@@ -1,6 +1,7 @@
 package com.fagerland.brotime.filters
 
 import com.fagerland.brotime.repositories.UserRepository
+import com.fagerland.brotime.services.JwtService
 import io.jsonwebtoken.Claims
 import io.jsonwebtoken.Jws
 import io.jsonwebtoken.Jwts
@@ -16,39 +17,20 @@ import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
 
 
-class JwtFilter constructor(
-    private val userRepository: UserRepository
+class JwtFilter(
+    private val jwtService: JwtService
 ) : GenericFilterBean() {
     override fun doFilter(servletRequest: ServletRequest?, servletResponse: ServletResponse?, filterChain: FilterChain?) {
         val req: HttpServletRequest = servletRequest as HttpServletRequest
         val res: HttpServletResponse = servletResponse as HttpServletResponse
-        val bearerToken = req.getHeader("Authentication")
-        val username = getUsernameFromToken(bearerToken)
-        if (username == null) {
-            res.sendError(HttpServletResponse.SC_UNAUTHORIZED)
-            return
-        } else {
-            val auth: Authentication = UsernamePasswordAuthenticationToken(username, null, arrayListOf())
+        val validUsername = jwtService.getUsernameFromRequest(req)
+        if (validUsername != null) {
+            val auth: Authentication = UsernamePasswordAuthenticationToken(validUsername, null, arrayListOf())
             SecurityContextHolder.getContext().authentication = auth
             filterChain?.doFilter(servletRequest, servletResponse)
+        } else {
+            res.sendError(HttpServletResponse.SC_UNAUTHORIZED)
+            return
         }
-    }
-
-    private fun getUsernameFromToken(token: String?): String? {
-        if (token != null) {
-            val tokenValue = token.substring(7, token.length)
-            try {
-                val claims: Jws<Claims> = Jwts.parser().setSigningKey("secret").parseClaimsJws(tokenValue)
-                if (!claims.body.expiration.before(Date())) {
-                    val username: String = claims.body.subject
-                    if (userRepository.findFirstByUsername(username) != null) {
-                        return username
-                    }
-                }
-            } catch (e: Exception) {
-                return null
-            }
-        }
-        return null
     }
 }

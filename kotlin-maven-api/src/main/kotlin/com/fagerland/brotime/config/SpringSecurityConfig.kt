@@ -1,6 +1,6 @@
 package com.fagerland.brotime.config
 
-import com.fagerland.brotime.repositories.UserRepository
+import com.fagerland.brotime.services.JwtService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -12,7 +12,7 @@ import org.springframework.security.config.http.SessionCreationPolicy
 
 @Configuration
 class SpringSecurityConfig @Autowired constructor(
-    val userRepository: UserRepository
+    val jwtService: JwtService
 ) : WebSecurityConfigurerAdapter() {
 
     @Bean
@@ -31,7 +31,7 @@ class SpringSecurityConfig @Autowired constructor(
             .authorizeRequests()
             .anyRequest().authenticated()
             .and()
-            .apply(JwtConfig(userRepository))
+            .apply(JwtConfig(jwtService))
     }
 
     @Throws(Exception::class)

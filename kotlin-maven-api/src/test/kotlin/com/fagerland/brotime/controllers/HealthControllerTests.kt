@@ -1,6 +1,6 @@
 package com.fagerland.brotime.controllers
 
-import com.fagerland.brotime.repositories.UserRepository
+import com.fagerland.brotime.services.JwtService
 import com.ninjasquad.springmockk.MockkBean
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -14,7 +14,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 class HealthControllerTests(@Autowired val mockMvc: MockMvc) {
 
     @MockkBean
-    private lateinit var userRepository: UserRepository
+    private lateinit var jwtService: JwtService
 
     @Test
     fun `Check health path`() {
