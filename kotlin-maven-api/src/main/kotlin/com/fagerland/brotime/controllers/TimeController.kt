@@ -23,9 +23,8 @@ import org.springframework.web.bind.annotation.RestController
 
 @CrossOrigin
 @RestController
-class TimeController @Autowired constructor(
+class TimeController(
     val userRepository: UserRepository,
-    val timeRepository: TimeRepository,
     val timeService: TimeService
 ) {
 
