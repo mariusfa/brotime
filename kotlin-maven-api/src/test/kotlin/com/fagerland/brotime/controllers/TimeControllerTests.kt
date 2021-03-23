@@ -1,6 +1,7 @@
 package com.fagerland.brotime.controllers
 
 import com.fagerland.brotime.dto.requests.InsertTimeDTO
+import com.fagerland.brotime.dto.requests.UpdateTimeDTO
 import com.fagerland.brotime.entities.TimeEntity
 import com.fagerland.brotime.entities.UserEntity
 import com.fagerland.brotime.repositories.UserRepository
@@ -19,6 +20,7 @@ import org.springframework.http.MediaType
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 
 @WebMvcTest(controllers = [TimeController::class])
@@ -92,5 +94,26 @@ class TimeControllerTests(@Autowired val mockMvc: MockMvc) {
 
         assertThat(slot.captured.timeStamp).isEqualTo(inserTime.timeStamp)
         assertThat(slot.captured.timeZone).isEqualTo(inserTime.timeZone)
+    }
+
+    @Test
+    fun `When update time return ok`() {
+        val updateTime = UpdateTimeDTO(1, 2, "Europe", 1)
+        every { jwtService.getUsernameFromRequest(any()) } returns user.username
+        every { userRepository.findFirstByUsername(user.username) } returns user
+
+        val slot = slot<UpdateTimeDTO>()
+
+        every { timeService.updateTime(user, capture(slot)) } returns true
+
+        mockMvc.perform(put("/api/time")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(Gson().toJson(updateTime).toString()))
+            .andExpect(status().isOk)
+
+        assertThat(slot.captured.startTime).isEqualTo(updateTime.startTime)
+        assertThat(slot.captured.endTime).isEqualTo(updateTime.endTime)
+        assertThat(slot.captured.timeZone).isEqualTo(updateTime.timeZone)
+        assertThat(slot.captured.id).isEqualTo(updateTime.id)
     }
 }
