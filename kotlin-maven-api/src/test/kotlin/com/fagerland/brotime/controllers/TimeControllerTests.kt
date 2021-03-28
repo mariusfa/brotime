@@ -2,6 +2,7 @@ package com.fagerland.brotime.controllers
 
 import com.fagerland.brotime.dto.requests.InsertTimeDTO
 import com.fagerland.brotime.dto.requests.UpdateTimeDTO
+import com.fagerland.brotime.dto.responses.TimeDiffDTO
 import com.fagerland.brotime.entities.TimeEntity
 import com.fagerland.brotime.entities.UserEntity
 import com.fagerland.brotime.repositories.UserRepository
@@ -19,6 +20,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
 import org.springframework.http.MediaType
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers.content
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 
 @WebMvcTest(controllers = [TimeController::class])
@@ -33,7 +35,7 @@ class TimeControllerTests(@Autowired val mockMvc: MockMvc) {
     @MockkBean
     private lateinit var userRepository: UserRepository
 
-    private val user = UserEntity("fakeUser", "fakeHash")
+    private val user = UserEntity("fakeUser", "fakeHash", 1)
 
     @Test
     fun `When getTimes returns TimeEntity list`() {
@@ -129,5 +131,23 @@ class TimeControllerTests(@Autowired val mockMvc: MockMvc) {
             .andExpect(status().isOk)
 
         assertThat(slot.captured).isEqualTo(timeId)
+    }
+
+    @Test
+    fun `When get time diff return timeDiff` () {
+        every { jwtService.getUsernameFromRequest(any()) } returns user.username
+        every { userRepository.findFirstByUsername(user.username) } returns user
+
+        val timeDiff: Long = 10
+        every { timeService.getTimeDiff(any()) } returns timeDiff
+
+        val result = mockMvc.perform(get("/api/time/diff"))
+            .andExpect(status().isOk)
+            .andReturn()
+
+        val content = result.response.contentAsString
+        val itemType = object : TypeToken<TimeDiffDTO>() {}.type
+        val timeResult = Gson().fromJson<TimeDiffDTO>(content, itemType)
+        assertThat(timeResult.timeDiff).isEqualTo(timeDiff)
     }
 }
