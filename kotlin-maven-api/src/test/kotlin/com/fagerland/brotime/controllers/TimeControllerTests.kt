@@ -18,9 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
 import org.springframework.http.MediaType
 import org.springframework.test.web.servlet.MockMvc
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 
 @WebMvcTest(controllers = [TimeController::class])
@@ -79,7 +77,7 @@ class TimeControllerTests(@Autowired val mockMvc: MockMvc) {
 
     @Test
     fun `When postTime return created status`() {
-        val inserTime = InsertTimeDTO(5,"Europe")
+        val insertTime = InsertTimeDTO(5,"Europe")
         every { jwtService.getUsernameFromRequest(any()) } returns user.username
         every { userRepository.findFirstByUsername(user.username) } returns user
 
@@ -89,11 +87,11 @@ class TimeControllerTests(@Autowired val mockMvc: MockMvc) {
 
         mockMvc.perform(post("/api/time")
             .contentType(MediaType.APPLICATION_JSON)
-            .content(Gson().toJson(inserTime).toString()))
+            .content(Gson().toJson(insertTime).toString()))
             .andExpect(status().isCreated)
 
-        assertThat(slot.captured.timeStamp).isEqualTo(inserTime.timeStamp)
-        assertThat(slot.captured.timeZone).isEqualTo(inserTime.timeZone)
+        assertThat(slot.captured.timeStamp).isEqualTo(insertTime.timeStamp)
+        assertThat(slot.captured.timeZone).isEqualTo(insertTime.timeZone)
     }
 
     @Test
@@ -115,5 +113,21 @@ class TimeControllerTests(@Autowired val mockMvc: MockMvc) {
         assertThat(slot.captured.endTime).isEqualTo(updateTime.endTime)
         assertThat(slot.captured.timeZone).isEqualTo(updateTime.timeZone)
         assertThat(slot.captured.id).isEqualTo(updateTime.id)
+    }
+
+    @Test
+    fun `When delete time return ok`() {
+        val timeId: Long = 1
+        every { jwtService.getUsernameFromRequest(any()) } returns user.username
+        every { userRepository.findFirstByUsername(user.username) } returns user
+
+        val slot = slot<Long>()
+
+        every { timeService.deleteTimeEntity(user, capture(slot)) } returns true
+
+        mockMvc.perform(delete("/api/time/{timeId}", timeId))
+            .andExpect(status().isOk)
+
+        assertThat(slot.captured).isEqualTo(timeId)
     }
 }
