@@ -5,6 +5,7 @@ import com.fagerland.brotime.dto.requests.UpdateTimeDTO
 import com.fagerland.brotime.dto.requests.UserDTO
 import com.fagerland.brotime.dto.responses.TimeDiffDTO
 import com.fagerland.brotime.entities.TimeEntity
+import com.fagerland.brotime.services.TimeService
 import com.fagerland.brotime.services.UserService
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
@@ -28,7 +29,8 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class TimeIntTests(
     @Autowired val mockMvc: MockMvc,
-    @Autowired val userService: UserService
+    @Autowired val userService: UserService,
+    @Autowired val timeService: TimeService
 ) {
 
     private lateinit var authHeader: String
@@ -70,25 +72,18 @@ class TimeIntTests(
 
     @Test
     fun `Should update time`() {
-        val updateTime = UpdateTimeDTO(1, 2, "Europe", 2)
+        val insertTime = InsertTimeDTO(5,"Europe")
+        mockMvc.perform(post("/api/time")
+            .header("Authentication", authHeader)
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(Gson().toJson(insertTime).toString()))
+            .andExpect(MockMvcResultMatchers.status().isCreated)
+
+        val updateTime = UpdateTimeDTO(1, 2, "Europe", 3)
         mockMvc.perform(put("/api/time")
             .header("Authentication", authHeader)
             .contentType(MediaType.APPLICATION_JSON)
             .content(Gson().toJson(updateTime).toString()))
             .andExpect(MockMvcResultMatchers.status().isOk)
     }
-
-    @Test
-    fun `Should get diff`() {
-        val result = mockMvc.perform(get("/api/time/diff").header("Authentication", authHeader))
-            .andExpect(MockMvcResultMatchers.status().isOk)
-            .andReturn()
-
-
-        val content = result.response.contentAsString
-        val itemType = object : TypeToken<TimeDiffDTO>() {}.type
-        val timeResult = Gson().fromJson<TimeDiffDTO>(content, itemType)
-        Assertions.assertThat(timeResult.timeDiff).isEqualTo(-28799999)
-    }
-
 }
