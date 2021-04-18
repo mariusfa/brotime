@@ -1,11 +1,14 @@
 package com.fagerland.brotime.integrations
 
 import com.fagerland.brotime.dto.requests.InsertTimeDTO
+import com.fagerland.brotime.dto.requests.UpdateTimeDTO
 import com.fagerland.brotime.dto.requests.UserDTO
+import com.fagerland.brotime.dto.responses.TimeDiffDTO
 import com.fagerland.brotime.entities.TimeEntity
 import com.fagerland.brotime.services.UserService
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import org.apache.tomcat.util.net.openssl.ciphers.Authentication
 import org.assertj.core.api.Assertions
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Test
@@ -64,4 +67,28 @@ class TimeIntTests(
         val timeList = Gson().fromJson<List<TimeEntity>>(content, itemType)
         Assertions.assertThat(timeList).hasSize(1)
     }
+
+    @Test
+    fun `Should update time`() {
+        val updateTime = UpdateTimeDTO(1, 2, "Europe", 2)
+        mockMvc.perform(put("/api/time")
+            .header("Authentication", authHeader)
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(Gson().toJson(updateTime).toString()))
+            .andExpect(MockMvcResultMatchers.status().isOk)
+    }
+
+    @Test
+    fun `Should get diff`() {
+        val result = mockMvc.perform(get("/api/time/diff").header("Authentication", authHeader))
+            .andExpect(MockMvcResultMatchers.status().isOk)
+            .andReturn()
+
+
+        val content = result.response.contentAsString
+        val itemType = object : TypeToken<TimeDiffDTO>() {}.type
+        val timeResult = Gson().fromJson<TimeDiffDTO>(content, itemType)
+        Assertions.assertThat(timeResult.timeDiff).isEqualTo(-28799999)
+    }
+
 }
