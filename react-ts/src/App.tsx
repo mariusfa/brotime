@@ -9,7 +9,7 @@ const App = () => {
             <Switch>
                 <Route path='/login' exact>
                     <Login />
-                </Route>
+            </Route >
                 <Route path='/register' exact>
                     <Register />
                 </Route>
