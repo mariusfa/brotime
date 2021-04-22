@@ -1,9 +1,10 @@
 import React from 'react';
+import { Login, Register } from './features/UserAuth'
 
 function App() {
 	return (
 		<>
-			Hello
+			<Register />
 		</>
 	);
 }
