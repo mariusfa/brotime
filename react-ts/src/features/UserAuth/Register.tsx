@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import { useHistory } from 'react-router';
+import errorMessages from './errorMessages';
 
 interface FormError {
     id: number;
@@ -13,27 +15,25 @@ const Register = () => {
     });
     const [errors, setErrors] = useState<FormError[]>([]);
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const history = useHistory(); 
 
     const validateForm = () => {
         let newErrors: FormError[] = [];
 
         if (!formData.username) {
-            newErrors.push({ id: 0, message: 'Plz fill username' });
+            newErrors.push(errorMessages.MISSING_USERNAME);
         }
 
         if (!formData.password) {
-            newErrors.push({ id: 1, message: 'Plz fill password' });
+            newErrors.push(errorMessages.MISSING_PASSWORD);
         }
 
         if (formData.password && formData.password.length < 6) {
-            newErrors.push({
-                id: 4,
-                message: 'Password length too short, min length is 6',
-            });
+            newErrors.push(errorMessages.PASSWORD_LENGTH);
         }
 
         if (!formData.password2) {
-            newErrors.push({ id: 2, message: 'Plz retype pasword' });
+            newErrors.push(errorMessages.RETYPE_PASSWORD);
         }
 
         if (
@@ -41,7 +41,7 @@ const Register = () => {
             formData.password2 &&
             formData.password !== formData.password2
         ) {
-            newErrors.push({ id: 3, message: 'Passwords mismatch' });
+            newErrors.push(errorMessages.PASSWORD_MISMATCH);
         }
 
         setErrors(newErrors);
@@ -68,12 +68,13 @@ const Register = () => {
                     }
                 );
                 if (result.ok) {
-                    console.log('redirect');
+                    history.push('/login');
+                    return
                 } else if (!result.ok && result.status === 409) {
-                    console.log('conflict');
+                    setErrors([errorMessages.USER_CONFLICT])
                 }
             } catch (error) {
-                console.log('general error');
+                setErrors([errorMessages.GENERAL_ERROR])
             }
             setIsSubmitting(false);
         }
