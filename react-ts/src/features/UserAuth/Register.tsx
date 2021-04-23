@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { useHistory } from 'react-router';
+import { API_URL } from '../../api/apiConfig';
+import postData from '../../api/postData';
 import errorMessages from './errorMessages';
 
 interface FormError {
@@ -15,7 +17,9 @@ const Register = () => {
     });
     const [errors, setErrors] = useState<FormError[]>([]);
     const [isSubmitting, setIsSubmitting] = useState(false);
-    const history = useHistory(); 
+    const history = useHistory();
+
+    console.log(API_URL);
 
     const validateForm = () => {
         let newErrors: FormError[] = [];
@@ -54,27 +58,18 @@ const Register = () => {
         if (validateForm()) {
             setIsSubmitting(true);
             try {
-                const result = await fetch(
-                    'http://localhost:8080/api/user/register',
-                    {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify({
-                            username,
-                            password,
-                        }),
-                    }
-                );
+                const result = await postData('api/user/register', {
+                    username,
+                    password,
+                });
                 if (result.ok) {
                     history.push('/login');
-                    return
+                    return;
                 } else if (!result.ok && result.status === 409) {
-                    setErrors([errorMessages.USER_CONFLICT])
+                    setErrors([errorMessages.USER_CONFLICT]);
                 }
             } catch (error) {
-                setErrors([errorMessages.GENERAL_ERROR])
+                setErrors([errorMessages.GENERAL_ERROR]);
             }
             setIsSubmitting(false);
         }
