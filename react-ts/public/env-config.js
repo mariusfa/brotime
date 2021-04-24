@@ -1,1 +1,1 @@
-window.API_URL = marius
+window.API_URL = 'marius'

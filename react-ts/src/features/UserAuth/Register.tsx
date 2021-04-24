@@ -3,11 +3,7 @@ import { useHistory } from 'react-router';
 import { API_URL } from '../../api/apiConfig';
 import postData from '../../api/postData';
 import errorMessages from './errorMessages';
-
-interface FormError {
-    id: number;
-    message: string;
-}
+import { FormError } from './types';
 
 const Register = () => {
     const [formData, setFormData] = useState({
