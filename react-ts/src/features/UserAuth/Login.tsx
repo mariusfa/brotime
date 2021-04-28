@@ -42,7 +42,7 @@ const Login = () => {
                 const result = await postData('api/user/login', {
                     username,
                     password,
-                });
+                }, false);
                 if (result.ok) {
                     const token = await result.text();
                     localStorage.setItem('token', token);

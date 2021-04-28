@@ -57,7 +57,7 @@ const Register = () => {
                 const result = await postData('api/user/register', {
                     username,
                     password,
-                });
+                }, false);
                 if (result.ok) {
                     history.push('/login');
                     return;

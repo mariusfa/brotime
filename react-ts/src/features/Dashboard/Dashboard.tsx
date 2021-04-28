@@ -18,12 +18,14 @@ const Dashboard = () => {
     const fetchLatestTime = async () => {
         const response = await getData('api/time');
         if (response.ok) {
-            const latestTimeJson = await response.json()
-            console.log(latestTimeJson);
+            const contentLength = (await response.text()).length
+            if (contentLength > 0) {
+                const latestTimeData = await response.json()
+                setLatestTime(latestTimeData)
+            }
         } else {
             console.log("fetch error");
         }
-        
     }
 
     useEffect(() => {
