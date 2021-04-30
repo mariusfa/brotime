@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import getData from '../../api/getData';
+import postData from '../../api/postData';
 
 interface TimeEntry {
     startTime: number;
@@ -11,6 +12,16 @@ interface TimeDiff {
     timeDiff: number;
 }
 
+const isToday = (timestamp: number): boolean => {
+    const timestampDate = new Date(timestamp);
+    const today = new Date(timestamp);
+    return (
+        timestampDate.getDate() === today.getDate() &&
+        timestampDate.getMonth() === today.getMonth() &&
+        timestampDate.getFullYear() === today.getFullYear()
+    );
+};
+
 const Dashboard = () => {
     const [latestTime, setLatestTime] = useState<TimeEntry | undefined>();
     const [timeDiff, setTimeDiff] = useState<TimeDiff | undefined>();
@@ -18,23 +29,41 @@ const Dashboard = () => {
     const fetchLatestTime = async () => {
         const response = await getData('api/time');
         if (response.ok) {
-            const contentLength = (await response.text()).length
-            if (contentLength > 0) {
-                const latestTimeData = await response.json()
-                setLatestTime(latestTimeData)
+            const content = await response.text();
+            if (content.length > 0) {
+                const latestTimeData = JSON.parse(content);
+                setLatestTime(latestTimeData);
             }
         } else {
-            console.log("fetch error");
+            console.log('fetch error');
         }
-    }
+    };
 
     useEffect(() => {
         fetchLatestTime();
     }, []);
 
+    const handleTimestampClick = async () => {
+        if (latestTime && isToday(latestTime.endTime)) {
+            console.log('Update time');
+        } else {
+            const response = await postData(
+                'api/time',
+                { timeStamp: Date.now(), timeZone: 'Europe' },
+                true
+            );
+
+            if (response.ok) {
+                fetchLatestTime()
+            } else {
+                console.log('Post error');
+            }
+        }
+    };
+
     return (
         <>
-            <button>Timestamp</button>
+            <button onClick={handleTimestampClick}>Timestamp</button>
             {latestTime ? (
                 <div>
                     <p>{latestTime.startTime}</p>
