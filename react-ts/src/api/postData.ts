@@ -13,6 +13,11 @@ const postData = async (endpoint: string, data: any, auth: boolean = true) => {
         headers: requestHeaders,
         body: JSON.stringify(data),
     });
+
+    if (result.status === 401) {
+        window.location.replace('/login');
+    }
+    
     return result;
 };
 

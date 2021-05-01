@@ -1,21 +1,22 @@
-import { API_URL } from "./apiConfig";
+import { API_URL } from './apiConfig';
 
-const getData = async (endpoint: string) => {
+const putData = async (endpoint: string, data: any) => {
     const authHeader = `Bearer ${localStorage.getItem('token')}`;
-    
+
     const result = await fetch(`${API_URL}${endpoint}`, {
-        method: 'GET',
+        method: 'PUT',
         headers: {
             'Content-Type': 'application/json',
-            'Authentication': authHeader
-        }
+            Authentication: authHeader,
+        },
+        body: JSON.stringify(data),
     });
 
     if (result.status === 401) {
         window.location.replace('/login');
     }
     
-    return result
+    return result;
 };
 
-export default getData;
+export default putData;

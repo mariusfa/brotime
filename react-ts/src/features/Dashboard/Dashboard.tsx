@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import getData from '../../api/getData';
 import postData from '../../api/postData';
+import putData from '../../api/putData';
 
 interface TimeEntry {
     startTime: number;
@@ -39,26 +40,31 @@ const Dashboard = () => {
         }
     };
 
+    const updateLatestTime = async () => {
+        await putData('api/time', { ...latestTime, endTime: Date.now() });
+    }
+
+    const postNewTime = async () => {
+        await postData(
+            'api/time',
+            { timeStamp: Date.now(), timeZone: 'Europe' },
+            true
+        );
+    }
+
     useEffect(() => {
         fetchLatestTime();
+        console.log('Render');
+        
     }, []);
 
     const handleTimestampClick = async () => {
         if (latestTime && isToday(latestTime.endTime)) {
-            console.log('Update time');
+            await updateLatestTime()
         } else {
-            const response = await postData(
-                'api/time',
-                { timeStamp: Date.now(), timeZone: 'Europe' },
-                true
-            );
-
-            if (response.ok) {
-                fetchLatestTime()
-            } else {
-                console.log('Post error');
-            }
+            await postNewTime();
         }
+        fetchLatestTime()
     };
 
     return (
