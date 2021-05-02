@@ -40,6 +40,19 @@ const Dashboard = () => {
         }
     };
 
+    const fetchTimeDiff = async () => {
+        const response = await getData('api/time/diff');
+        if (response.ok) {
+            const content = await response.text();
+            if (content.length > 0) {
+                const timeDiffData = JSON.parse(content);
+                setTimeDiff(timeDiffData!!.timeDiff);
+            }
+        } else {
+            console.log('fetch error');
+        }
+    }
+
     const updateLatestTime = async () => {
         await putData('api/time', { ...latestTime, endTime: Date.now() });
     }
@@ -54,6 +67,7 @@ const Dashboard = () => {
 
     useEffect(() => {
         fetchLatestTime();
+        fetchTimeDiff();
     }, []);
 
     const handleTimestampClick = async () => {
@@ -62,7 +76,8 @@ const Dashboard = () => {
         } else {
             await postNewTime();
         }
-        fetchLatestTime()
+        fetchLatestTime();
+        fetchTimeDiff();
     };
 
     return (
