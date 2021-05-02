@@ -54,8 +54,6 @@ const Dashboard = () => {
 
     useEffect(() => {
         fetchLatestTime();
-        console.log('Render');
-        
     }, []);
 
     const handleTimestampClick = async () => {

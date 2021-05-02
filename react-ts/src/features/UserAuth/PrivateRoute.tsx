@@ -2,20 +2,17 @@ import React, { useEffect, useState } from 'react';
 import { Route, useHistory } from 'react-router-dom';
 
 interface Props {
-    children: React.ReactChildren;
+    path: string,
+    exact: any
 }
 
-const PrivateRoute = ({ children, ...rest }: Props) => {
-    const [isAuth, setIsAuth] = useState(false);
+const PrivateRoute: React.FC<Props> = ({ children, ...rest }) => {
     const history = useHistory();
-
-    useEffect(() => {
-        if (localStorage.getItem('token')) {
-            setIsAuth(true);
-        } else {
-            history.replace('/login');
-        }
-    }, []);
+    const token = localStorage.getItem('token');
+     
+    if (!token) {
+        history.push('/login');
+    }
 
     return <Route {...rest}>{children}</Route>;
 };

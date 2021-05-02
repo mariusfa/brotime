@@ -1,5 +1,5 @@
 import React from 'react';
-import { Login, Register } from './features/UserAuth';
+import { Login, PrivateRoute, Register } from './features/UserAuth';
 import { BrowserRouter as Router, Switch, Route, Redirect } from 'react-router-dom';
 import Dashboard from './features/Dashboard/Dashboard';
 
@@ -13,9 +13,9 @@ const App = () => {
                 <Route path='/register' exact>
                     <Register />
                 </Route>
-                <Route path='/dashboard' exact>
+                <PrivateRoute path='/dashboard' exact>
                     <Dashboard />
-                </Route>
+                </PrivateRoute>
                 <Route path='/' exact>
                     <Redirect to='/dashboard' />
                 </Route>
