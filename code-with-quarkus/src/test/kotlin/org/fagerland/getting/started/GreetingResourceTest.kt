@@ -11,10 +11,9 @@ class GreetingResourceTest {
     @Test
     fun testGreetingEndpoint() {
         given()
-          .`when`().get("/greeting/marius")
-          .then()
-             .statusCode(200)
-             .body(`is`("Hello marius"))
+            .`when`().get("/greeting/marius")
+            .then()
+            .statusCode(200)
+            .body(`is`("Hello marius"))
     }
-
 }

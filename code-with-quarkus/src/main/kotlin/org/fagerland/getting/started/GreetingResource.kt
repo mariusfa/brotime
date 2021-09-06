@@ -8,7 +8,7 @@ import javax.ws.rs.core.MediaType
 
 @Path("/")
 class GreetingResource(
-        val greetingService: GreetingService
+    val greetingService: GreetingService
 ) {
     @GET
     @Produces(MediaType.TEXT_PLAIN)
