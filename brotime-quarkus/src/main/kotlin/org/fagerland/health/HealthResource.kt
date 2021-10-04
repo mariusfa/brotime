@@ -1,4 +1,4 @@
-package org.fagerland
+package org.fagerland.health
 
 import javax.ws.rs.GET
 import javax.ws.rs.Path

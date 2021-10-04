@@ -13,5 +13,6 @@ import javax.ws.rs.core.MediaType
 class UserResource {
 
     @POST
-    fun helloUser(userRequestDTO: UserRequestDTO) = "hello ${userRequestDTO.username}"
+    @Path("/hello")
+    fun helloUser(userResquestDTO: UserRequestDTO) = "hello ${userResquestDTO.username}"
 }

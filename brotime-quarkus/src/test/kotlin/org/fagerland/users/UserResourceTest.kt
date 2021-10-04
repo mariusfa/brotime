@@ -19,7 +19,7 @@ class UserResourceTest {
                     }
                 """
             )
-            .`when`().post("/api/users")
+            .`when`().post("/api/users/hello")
             .then()
             .statusCode(200)
             .body(CoreMatchers.`is`("hello test"))
