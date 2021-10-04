@@ -25,4 +25,20 @@ class UserResourceTest {
             .body(CoreMatchers.`is`("hello test"))
 
     }
+
+    @Test
+    fun `should test register user`() {
+        RestAssured.given()
+            .contentType("application/json")
+            .body(
+                """
+                    {
+                        "username": "test"
+                    }
+                """.trimIndent()
+            )
+            .`when`().post("/api/users/register")
+            .then()
+            .statusCode(204)
+    }
 }
