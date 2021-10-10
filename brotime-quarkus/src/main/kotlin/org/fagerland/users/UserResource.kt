@@ -18,7 +18,7 @@ class UserResource(
 
     @POST
     @Path("/hello")
-    fun helloUser(userResquestDTO: UserRequestDTO) = "hello ${userResquestDTO.username}"
+    fun helloUser(userRequestDTO: UserRequestDTO) = "hello ${userRequestDTO.username}"
 
     @POST
     @Path("/register")
