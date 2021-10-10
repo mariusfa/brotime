@@ -2,7 +2,9 @@ package org.fagerland.users
 
 import org.fagerland.users.dto.RegisterUserReqDTO
 import org.fagerland.users.dto.UserRequestDTO
+import org.fagerland.users.dto.UserResponseDTO
 import javax.ws.rs.Consumes
+import javax.ws.rs.GET
 import javax.ws.rs.POST
 import javax.ws.rs.Path
 import javax.ws.rs.Produces
@@ -32,5 +34,16 @@ class UserResource(
             throw e
         }
         return Response.noContent().build()
+    }
+
+    @GET
+    @Path("/list")
+    fun list(): List<UserResponseDTO> {
+        val users = userService.listUsers()
+        return users.map {
+            UserResponseDTO(
+                username = it.username
+            )
+        }
     }
 }
