@@ -4,5 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty
 
 data class RegisterUserReqDTO(
     @JsonProperty("username")
-    val username: String
+    val username: String,
+    @JsonProperty("password")
+    val password: String
 )
