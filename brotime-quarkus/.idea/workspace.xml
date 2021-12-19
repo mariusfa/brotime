@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="f97b9906-2f6a-4069-a93f-51ddc765fe93" name="Changes" comment="Implement user db">
+      <change beforePath="$PROJECT_DIR$/.dockerignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.mvn/wrapper/MavenWrapperDownloader.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.mvn/wrapper/maven-wrapper.properties" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/mvnw" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/mvnw.cmd" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/docker/Dockerfile.jvm" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/docker/Dockerfile.legacy-jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/docker/Dockerfile.native" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/docker/Dockerfile.native-distroless" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/org/fagerland/health/HealthResource.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/org/fagerland/users/User.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/org/fagerland/users/UserRepository.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/org/fagerland/users/UserResource.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/org/fagerland/users/UserService.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/org/fagerland/users/dto/RegisterUserReqDTO.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/org/fagerland/users/dto/UserRequestDTO.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/org/fagerland/users/dto/UserResponseDTO.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/META-INF/resources/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/application.properties" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/kotlin/org/fagerland/HealthResourceTest.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/kotlin/org/fagerland/NativeGreetingResourceIT.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/kotlin/org/fagerland/users/UserResourceTest.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../react-ts/env.sh" beforeDir="false" afterPath="$PROJECT_DIR$/../react-ts/env.sh" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../react-ts/src/api/apiConfig.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../react-ts/src/api/apiConfig.ts" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Kotlin DTO" />
+        <option value="Kotlin Class" />
+        <option value="Kotlin Data Class" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
+  </component>
+  <component name="GitSEFilterConfiguration">
+    <file-type-list>
+      <filtered-out-file-type name="LOCAL_BRANCH" />
+      <filtered-out-file-type name="REMOTE_BRANCH" />
+      <filtered-out-file-type name="TAG" />
+      <filtered-out-file-type name="COMMIT_BY_MESSAGE" />
+    </file-type-list>
+  </component>
+  <component name="ProjectId" id="1z3ReA0sAsoReoIPpZLxYF2ihbF" />
+  <component name="ProjectViewState">
+    <option name="autoscrollFromSource" value="true" />
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="settings.editor.selected.configurable" value="fileTemplates" />
+  </component>
+  <component name="RecentsManager">
+    <key name="CreateKotlinClassDialog.RecentsKey">
+      <recent name="org.fagerland.users" />
+    </key>
+    <key name="MoveKotlinTopLevelDeclarationsDialog.RECENTS_KEY">
+      <recent name="org.fagerland.users" />
+      <recent name="org.fagerland.health" />
+    </key>
+  </component>
+  <component name="RunManager" selected="JUnit.UserResourceTest.should test list users">
+    <configuration name="UserResourceTest.should test hello user" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="brotime-quarkus" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="org.fagerland.users.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="org.fagerland.users" />
+      <option name="MAIN_CLASS_NAME" value="org.fagerland.users.UserResourceTest" />
+      <option name="METHOD_NAME" value="should test hello user" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="UserResourceTest.should test list users" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="brotime-quarkus" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="org.fagerland.users.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="org.fagerland.users" />
+      <option name="MAIN_CLASS_NAME" value="org.fagerland.users.UserResourceTest" />
+      <option name="METHOD_NAME" value="should test list users" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="UserResourceTest.should test register user" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="brotime-quarkus" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="org.fagerland.users.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="org.fagerland.users" />
+      <option name="MAIN_CLASS_NAME" value="org.fagerland.users.UserResourceTest" />
+      <option name="METHOD_NAME" value="should test register user" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="JUnit.UserResourceTest.should test list users" />
+        <item itemvalue="JUnit.UserResourceTest.should test register user" />
+        <item itemvalue="JUnit.UserResourceTest.should test hello user" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="f97b9906-2f6a-4069-a93f-51ddc765fe93" name="Changes" comment="" />
+      <created>1633374885844</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1633374885844</updated>
+    </task>
+    <task id="LOCAL-00001" summary="Add hello user endpoint">
+      <created>1633375358982</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1633375358982</updated>
+    </task>
+    <task id="LOCAL-00002" summary="Fix typo">
+      <created>1633855598708</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1633855598708</updated>
+    </task>
+    <task id="LOCAL-00003" summary="Implement user db">
+      <created>1633858742319</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1633858742319</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
+    <servers />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+    <option name="oldMeFiltersMigrated" value="true" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Add hello user endpoint" />
+    <MESSAGE value="Fix typo" />
+    <MESSAGE value="Implement user db" />
+    <option name="LAST_COMMIT_MESSAGE" value="Implement user db" />
+  </component>
+  <component name="XSLT-Support.FileAssociations.UIState">
+    <expand />
+    <select />
+  </component>
+</project>
