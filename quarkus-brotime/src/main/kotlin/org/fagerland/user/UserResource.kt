@@ -12,7 +12,8 @@ import javax.ws.rs.core.MediaType
 class UserResource {
 
     @POST
-    fun registerUser(user: RegiserUserDTO): RegiserUserDTO {
+    @Path("/register")
+    fun registerUser(user: RegisterUserDTO): RegisterUserDTO {
         return user
     }
 }
