@@ -1,6 +1,6 @@
 package org.fagerland.user
 
-data class RegisterUserDTO(
+data class UserDTO(
     val username: String,
     val password: String
 )
