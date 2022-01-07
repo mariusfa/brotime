@@ -128,4 +128,16 @@ class UserResourceTest {
             statusCode(401)
         }
     }
+
+    @Test
+    @Transactional
+    fun `should not validate when missing header`() {
+        Given {
+            header("Content-Type", MediaType.APPLICATION_JSON)
+        } When {
+            get("/api/users/validate")
+        } Then {
+            statusCode(401)
+        }
+    }
 }

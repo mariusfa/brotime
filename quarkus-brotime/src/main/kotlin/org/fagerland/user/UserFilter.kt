@@ -20,7 +20,8 @@ class UserFilter : ContainerRequestFilter {
 
     override fun filter(requestContext: ContainerRequestContext) {
         resourceInfo.resourceMethod.getAnnotation(RolesAllowed::class.java)?.let {
-            val username = requestContext.securityContext.userPrincipal.name
+
+            val username = requestContext.securityContext.userPrincipal?.name ?: throw WebApplicationException(401)
             userRepository.findByUsername(username) ?: throw WebApplicationException(401)
         }
     }
