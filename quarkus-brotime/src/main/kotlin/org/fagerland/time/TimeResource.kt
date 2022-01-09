@@ -1,6 +1,6 @@
 package org.fagerland.time
 
-import org.fagerland.time.dto.CreateTimeDTO
+import org.fagerland.time.dto.TimeRequestDTO
 import org.fagerland.time.dto.TimeDTO
 import javax.annotation.security.RolesAllowed
 import javax.enterprise.context.RequestScoped
@@ -10,6 +10,7 @@ import javax.ws.rs.GET
 import javax.ws.rs.POST
 import javax.ws.rs.PUT
 import javax.ws.rs.Path
+import javax.ws.rs.PathParam
 import javax.ws.rs.Produces
 import javax.ws.rs.core.Context
 import javax.ws.rs.core.MediaType
@@ -26,9 +27,9 @@ class TimeResource(
 
     @POST
     @RolesAllowed("user")
-    fun create(createTimeDTO: CreateTimeDTO, @Context ctx: SecurityContext): Response {
-        timeService.create(createTimeDTO, ctx.userPrincipal.name)
-        return Response.status(201).build()
+    fun create(timeRequestDTO: TimeRequestDTO, @Context ctx: SecurityContext): Response {
+        timeService.create(timeRequestDTO, ctx.userPrincipal.name)
+        return Response.status(Response.Status.CREATED).build()
     }
 
     @GET
@@ -36,9 +37,11 @@ class TimeResource(
     fun list(@Context ctx: SecurityContext): List<TimeDTO> = timeService.list(ctx.userPrincipal.name).map { it.toDTO() }
 
     @PUT
+    @Path("{id}")
     @RolesAllowed("user")
-    fun update(): String {
-        return "hello"
+    fun update(timeRequestDTO: TimeRequestDTO, @Context ctx: SecurityContext, @PathParam("id") id: Long): Response {
+        timeService.update(timeRequestDTO, ctx.userPrincipal.name, id)
+        return Response.status(Response.Status.NO_CONTENT).build()
     }
 
     @DELETE

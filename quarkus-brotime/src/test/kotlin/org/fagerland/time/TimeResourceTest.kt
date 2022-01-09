@@ -1,12 +1,14 @@
-package org.fagerland.user
+package org.fagerland.time
 
 import io.quarkus.elytron.security.common.BcryptUtil
 import io.quarkus.test.junit.QuarkusTest
 import io.restassured.module.kotlin.extensions.Given
 import io.restassured.module.kotlin.extensions.Then
 import io.restassured.module.kotlin.extensions.When
-import org.fagerland.time.Time
-import org.fagerland.time.TimeRepository
+import org.fagerland.user.User
+import org.fagerland.user.UserDTO
+import org.fagerland.user.UserRepository
+import org.fagerland.user.UserService
 import org.hamcrest.CoreMatchers
 import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.Assertions
@@ -65,7 +67,6 @@ class TimeResourceTest {
     }
 
     @Test
-    @Transactional
     fun `should post time entry`() {
         val token = userService.loginUser(UserDTO(username = "test_user", "test_password"))
         Given {
@@ -74,8 +75,8 @@ class TimeResourceTest {
             body(
                 """
                 {
-                    "start": 1641593434076,
-                    "end": 1641593434076
+                    "start": 1641593434078,
+                    "end": 1641593434078
                 }
             """.trimIndent()
             )
@@ -85,15 +86,14 @@ class TimeResourceTest {
             statusCode(201)
         }
 
-        val time = timeRepository.findById(1)
+        val time = timeRepository.findById(3)
         Assertions.assertNotNull(time)
-        Assertions.assertEquals(BigInteger("1641593434076"), time!!.startTime)
-        Assertions.assertEquals(BigInteger("1641593434076"), time!!.endTime)
+        Assertions.assertEquals(BigInteger("1641593434078"), time!!.startTime)
+        Assertions.assertEquals(BigInteger("1641593434078"), time!!.endTime)
         Assertions.assertEquals("test_user", time.user.username)
     }
 
     @Test
-    @Transactional
     fun `should list time`() {
         val token = userService.loginUser(UserDTO(username = "test_user", "test_password"))
         Given {
@@ -103,9 +103,36 @@ class TimeResourceTest {
             get("/api/time")
         } Then {
             statusCode(200)
-            body("size()", CoreMatchers.equalTo(2))
+            body("size()", CoreMatchers.equalTo(3))
             body("[0].start", CoreMatchers.equalTo(1641593434077))
             body("[1].start", CoreMatchers.equalTo(1641593434076))
         }
     }
+
+    @Test
+    @Transactional
+    fun `should update time`() {
+        val token = userService.loginUser(UserDTO(username = "test_user", "test_password"))
+        Given {
+            header("Content-Type", MediaType.APPLICATION_JSON)
+            header("Authorization", "Bearer $token")
+            body("""
+                {
+                    "start": 1641593434079,
+                    "end": 1641593434080
+                }
+            """.trimIndent())
+        } When {
+            put("/api/time/1")
+        } Then {
+            statusCode(204)
+        }
+
+        val time = timeRepository.findById(1)
+        Assertions.assertNotNull(time)
+        Assertions.assertEquals(BigInteger("1641593434079"), time!!.startTime)
+        Assertions.assertEquals(BigInteger("1641593434080"), time!!.endTime)
+        Assertions.assertEquals("test_user", time.user.username)
+    }
+
 }

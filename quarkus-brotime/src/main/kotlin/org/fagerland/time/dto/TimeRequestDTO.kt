@@ -2,7 +2,7 @@ package org.fagerland.time.dto
 
 import java.math.BigInteger
 
-data class CreateTimeDTO(
+data class TimeRequestDTO(
     val start: BigInteger,
     val end: BigInteger
 )
