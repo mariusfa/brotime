@@ -1,5 +1,7 @@
 package org.fagerland.time
 
+import org.fagerland.time.dto.CreateTimeDTO
+import org.fagerland.time.dto.TimeDTO
 import javax.annotation.security.RolesAllowed
 import javax.enterprise.context.RequestScoped
 import javax.ws.rs.Consumes
@@ -24,25 +26,23 @@ class TimeResource(
 
     @POST
     @RolesAllowed("user")
-    fun create(timeDTO: TimeDTO, @Context ctx: SecurityContext): Response {
-        timeService.create(timeDTO, ctx.userPrincipal.name)
+    fun create(createTimeDTO: CreateTimeDTO, @Context ctx: SecurityContext): Response {
+        timeService.create(createTimeDTO, ctx.userPrincipal.name)
         return Response.status(201).build()
     }
 
     @GET
     @RolesAllowed("user")
-    fun list(): String {
-        return "hello"
-    }
+    fun list(@Context ctx: SecurityContext): List<TimeDTO> = timeService.list(ctx.userPrincipal.name).map { it.toDTO() }
 
     @PUT
-    @RolesAllowed
+    @RolesAllowed("user")
     fun update(): String {
         return "hello"
     }
 
     @DELETE
-    @RolesAllowed
+    @RolesAllowed("user")
     fun delete(): String {
         return "hello"
     }

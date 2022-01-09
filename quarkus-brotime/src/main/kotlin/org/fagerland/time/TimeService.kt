@@ -1,29 +1,34 @@
 package org.fagerland.time
 
+import io.quarkus.panache.common.Sort
+import org.fagerland.time.dto.CreateTimeDTO
 import org.fagerland.user.User
-import org.fagerland.user.UserRepository
+import org.fagerland.user.UserService
 import javax.enterprise.context.ApplicationScoped
 import javax.transaction.Transactional
-import javax.ws.rs.WebApplicationException
-import javax.ws.rs.core.Response
 
 @ApplicationScoped
 class TimeService(
     private val timeRepository: TimeRepository,
-    private val userRepository: UserRepository,
+    private val userService: UserService,
 ) {
 
     @Transactional
-    fun create(timeDTO: TimeDTO, name: String) {
-        val user = userRepository.findByUsername(name) ?: throw WebApplicationException("User: $name no found", Response.Status.NOT_FOUND)
-        val time = mapToTime(timeDTO, user)
+    fun create(createTimeDTO: CreateTimeDTO, name: String) {
+        val user = userService.getUser(name)
+        val time = mapToTime(createTimeDTO, user)
         timeRepository.persist(time)
     }
 
-    private fun mapToTime(timeDTO: TimeDTO, user: User): Time {
+    fun list(name: String): List<Time> {
+        val user = userService.getUser(name)
+        return timeRepository.list("user", Sort.by("startTime").descending(), user)
+    }
+
+    private fun mapToTime(createTimeDTO: CreateTimeDTO, user: User): Time {
         val newTime = Time()
-        newTime.startTime = timeDTO.start
-        newTime.endTime = timeDTO.end
+        newTime.startTime = createTimeDTO.start
+        newTime.endTime = createTimeDTO.end
         newTime.user = user
         return newTime
     }

@@ -34,4 +34,9 @@ class UserService(
 
         return Jwt.upn(user.username).groups(setOf("user")).sign()
     }
+
+    fun getUser(name: String): User = userRepository.findByUsername(name) ?: throw WebApplicationException(
+        "User: $name no found",
+        Response.Status.NOT_FOUND
+    )
 }

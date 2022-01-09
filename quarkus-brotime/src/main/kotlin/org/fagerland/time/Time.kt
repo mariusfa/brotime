@@ -1,5 +1,6 @@
 package org.fagerland.time
 
+import org.fagerland.time.dto.TimeDTO
 import org.fagerland.user.User
 import java.math.BigInteger
 import javax.persistence.Entity
@@ -21,4 +22,10 @@ class Time {
 
     @ManyToOne
     lateinit var user: User
+
+    fun toDTO(): TimeDTO = TimeDTO(
+        id = this.id!!,
+        start = this.startTime,
+        end = this.endTime
+    )
 }
