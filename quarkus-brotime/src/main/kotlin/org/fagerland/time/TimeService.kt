@@ -1,8 +1,6 @@
 package org.fagerland.time
 
-import io.quarkus.panache.common.Sort
 import org.fagerland.time.dto.TimeRequestDTO
-import org.fagerland.user.User
 import org.fagerland.user.UserService
 import javax.enterprise.context.ApplicationScoped
 import javax.transaction.Transactional
@@ -18,21 +16,12 @@ class TimeService(
     @Transactional
     fun create(timeRequestDTO: TimeRequestDTO, name: String) {
         val user = userService.getUser(name)
-        val time = mapToTime(timeRequestDTO, user)
-        timeRepository.persist(time)
+        timeRepository.createTime(timeRequestDTO, user)
     }
 
     fun list(name: String): List<Time> {
         val user = userService.getUser(name)
-        return timeRepository.list("user", Sort.by("startTime").descending(), user)
-    }
-
-    private fun mapToTime(timeRequestDTO: TimeRequestDTO, user: User): Time {
-        val newTime = Time()
-        newTime.startTime = timeRequestDTO.start
-        newTime.endTime = timeRequestDTO.end
-        newTime.user = user
-        return newTime
+        return timeRepository.listTimesByUser(user)
     }
 
     @Transactional
