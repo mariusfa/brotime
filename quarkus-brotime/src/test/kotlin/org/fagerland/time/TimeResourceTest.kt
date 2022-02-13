@@ -13,16 +13,19 @@ import org.hamcrest.CoreMatchers
 import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeAll
+import org.junit.jupiter.api.MethodOrderer
+import org.junit.jupiter.api.Order
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
+import org.junit.jupiter.api.TestMethodOrder
 import java.math.BigInteger
 import javax.inject.Inject
-import javax.persistence.EntityManager
 import javax.transaction.Transactional
 import javax.ws.rs.core.MediaType
 
 @QuarkusTest
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
+@TestMethodOrder(MethodOrderer.OrderAnnotation::class)
 class TimeResourceTest {
 
     @Inject
@@ -34,9 +37,6 @@ class TimeResourceTest {
     @Inject
     private lateinit var timeRepository: TimeRepository
 
-    @Inject
-    private lateinit var em: EntityManager
-
     @BeforeAll
     @Transactional
     fun setup() {
@@ -44,7 +44,6 @@ class TimeResourceTest {
         testUser.username = "test_user"
         testUser.hashedPassword = BcryptUtil.bcryptHash("test_password")
         userRepository.persistAndFlush(testUser)
-
 
         val time1 = Time()
         time1.startTime = BigInteger("1641593434076")
@@ -67,6 +66,52 @@ class TimeResourceTest {
     }
 
     @Test
+    @Order(1)
+    fun `should list time`() {
+        val token = userService.loginUser(UserDTO(username = "test_user", "test_password"))
+        Given {
+            header("Content-Type", MediaType.APPLICATION_JSON)
+            header("Authorization", "Bearer $token")
+        } When {
+            get("/api/time")
+        } Then {
+            statusCode(200)
+            body("size()", CoreMatchers.equalTo(2))
+            body("[0].start", CoreMatchers.equalTo(1641593434077))
+            body("[1].start", CoreMatchers.equalTo(1641593434076))
+        }
+    }
+
+    @Test
+    @Order(2)
+    fun `should update time`() {
+        val token = userService.loginUser(UserDTO(username = "test_user", "test_password"))
+        Given {
+            header("Content-Type", MediaType.APPLICATION_JSON)
+            header("Authorization", "Bearer $token")
+            body(
+                """
+                {
+                    "start": 1641593434079,
+                    "end": 1641593434080
+                }
+            """.trimIndent()
+            )
+        } When {
+            put("/api/time/1")
+        } Then {
+            statusCode(204)
+        }
+
+        val time = timeRepository.findById(1)
+        Assertions.assertNotNull(time)
+        Assertions.assertEquals(BigInteger("1641593434079"), time!!.startTime)
+        Assertions.assertEquals(BigInteger("1641593434080"), time!!.endTime)
+        Assertions.assertEquals("test_user", time.user.username)
+    }
+
+    @Test
+    @Order(3)
     fun `should post time entry`() {
         val token = userService.loginUser(UserDTO(username = "test_user", "test_password"))
         Given {
@@ -92,47 +137,4 @@ class TimeResourceTest {
         Assertions.assertEquals(BigInteger("1641593434078"), time!!.endTime)
         Assertions.assertEquals("test_user", time.user.username)
     }
-
-    @Test
-    fun `should list time`() {
-        val token = userService.loginUser(UserDTO(username = "test_user", "test_password"))
-        Given {
-            header("Content-Type", MediaType.APPLICATION_JSON)
-            header("Authorization", "Bearer $token")
-        } When {
-            get("/api/time")
-        } Then {
-            statusCode(200)
-            body("size()", CoreMatchers.equalTo(3))
-            body("[0].start", CoreMatchers.equalTo(1641593434077))
-            body("[1].start", CoreMatchers.equalTo(1641593434076))
-        }
-    }
-
-    @Test
-    @Transactional
-    fun `should update time`() {
-        val token = userService.loginUser(UserDTO(username = "test_user", "test_password"))
-        Given {
-            header("Content-Type", MediaType.APPLICATION_JSON)
-            header("Authorization", "Bearer $token")
-            body("""
-                {
-                    "start": 1641593434079,
-                    "end": 1641593434080
-                }
-            """.trimIndent())
-        } When {
-            put("/api/time/1")
-        } Then {
-            statusCode(204)
-        }
-
-        val time = timeRepository.findById(1)
-        Assertions.assertNotNull(time)
-        Assertions.assertEquals(BigInteger("1641593434079"), time!!.startTime)
-        Assertions.assertEquals(BigInteger("1641593434080"), time!!.endTime)
-        Assertions.assertEquals("test_user", time.user.username)
-    }
-
 }

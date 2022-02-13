@@ -29,7 +29,7 @@ class TimeService(
         val user = userService.getUser(name)
         val time =
             timeRepository.find("id = ?1 and user = ?2", id, user).firstResult() ?: throw WebApplicationException(
-                "Cannot find time: $id for user: $name",
+                "Cannot find time: $id for user: ${user.id}",
                 Response.Status.NOT_FOUND
             )
         timeRepository.updateTime(time, timeRequestDTO)
